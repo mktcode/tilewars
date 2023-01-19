@@ -22,7 +22,7 @@ const unit = computed(() => {
 </script>
 
 <template>
-  <div class="flex rounded-xl text-white text-xs w-14 h-14">
+  <div class="flex rounded-xl overflow-hidden text-white text-xs w-14 h-14">
     <template v-if="unit && unit.health > 0">
       <Tank v-if="unit.tags.includes('tank')">{{ unit.health }}/{{ unit.damage }}</Tank>
       <Soldier v-if="unit.tags.includes('soldier')">{{ unit.health }}/{{ unit.damage }}</Soldier>
