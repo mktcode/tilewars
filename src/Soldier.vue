@@ -1,5 +1,14 @@
+<script setup lang="ts">
+import type { AbstractUnit } from './game/objects';
+import Unit from './Unit.vue';
+
+defineProps<{
+  unit: AbstractUnit;
+}>();
+</script>
+
 <template>
-  <div class="grow bg-sky-300">
-    <slot/>
-  </div>
+  <Unit class="bg-sky-300" :unit="unit">
+    <div>Soldier</div>
+  </Unit>
 </template>

@@ -1,14 +1,20 @@
-import type { Unit } from '@/game/objects'
+import type { AbstractUnit } from '@/game/objects'
 
-export enum Direction {
+export enum DIRECTION {
   Up,
   Down,
+}
+
+export enum PLAYSPEED {
+  Slow = 1000,
+  Medium = 500,
+  Fast = 100,
 }
 
 const MAX_SPEED = 3
 const MAX_FIRERATE = 3
 
-const moveUnits = (turnCount: number, direction: Direction, units: Unit[], enemyUnits: Unit[]) => {
+const moveUnits = (turnCount: number, direction: DIRECTION, units: AbstractUnit[], enemyUnits: AbstractUnit[]) => {
   units.forEach(unit => {
     if (unit.speed === 0) return
     if (unit.health === 0) return
@@ -16,7 +22,7 @@ const moveUnits = (turnCount: number, direction: Direction, units: Unit[], enemy
     const speedAllowsMove = unit.speed > 0 && turnCount % (1 + MAX_SPEED - unit.speed) === 0
     if (!speedAllowsMove) return
 
-    const targetY = unit.y + (direction === Direction.Up ? 1 : -1)
+    const targetY = unit.y + (direction === DIRECTION.Up ? 1 : -1)
     if (targetY < 1 || targetY > 10) return
 
     const isBlockedByUnit = [...units, ...enemyUnits].find(
@@ -31,7 +37,7 @@ const moveUnits = (turnCount: number, direction: Direction, units: Unit[], enemy
   })
 }
 
-const dealDamage = (turnCount: number, units: Unit[], enemyUnits: Unit[]) => {
+const dealDamage = (turnCount: number, units: AbstractUnit[], enemyUnits: AbstractUnit[]) => {
   units.forEach(unit => {
     if (unit.damage === 0) return
     if (unit.health === 0) return
@@ -56,13 +62,13 @@ const dealDamage = (turnCount: number, units: Unit[], enemyUnits: Unit[]) => {
   })
 }
 
-const playHalfTurn = (turnCount: number, direction: Direction, units: Unit[], enemyUnits: Unit[]) => {
+const playHalfTurn = (turnCount: number, direction: DIRECTION, units: AbstractUnit[], enemyUnits: AbstractUnit[]) => {
   moveUnits(turnCount, direction, units, enemyUnits)
   dealDamage(turnCount, units, enemyUnits)
   dealDamage(turnCount, enemyUnits, units)
 }
 
-export const playTurn = (turnCount: number, player1Units: Unit[], player2Units: Unit[]) => {
-  playHalfTurn(turnCount, Direction.Up, player1Units, player2Units)
-  playHalfTurn(turnCount, Direction.Down, player2Units, player1Units)
+export const playTurn = (turnCount: number, player1Units: AbstractUnit[], player2Units: AbstractUnit[]) => {
+  playHalfTurn(turnCount, DIRECTION.Up, player1Units, player2Units)
+  playHalfTurn(turnCount, DIRECTION.Down, player2Units, player1Units)
 }

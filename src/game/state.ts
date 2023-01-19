@@ -1,7 +1,7 @@
 import { ref } from 'vue';
-import { Unit, Base, Tank, Soldier, Sniper } from '@/game/objects';
+import { AbstractUnit, Base, Tank, Soldier, Sniper } from '@/game/objects';
 
-const player1Units = ref<Unit[]>([
+const player1Units = ref<AbstractUnit[]>([
   new Base(3, 1),
   new Tank(2, 2),
   new Tank(3, 2),
@@ -15,7 +15,7 @@ const player1Units = ref<Unit[]>([
   new Sniper(4, 1),
 ])
 
-const player2Units = ref<Unit[]>([
+const player2Units = ref<AbstractUnit[]>([
   new Base(3, 10),
   new Tank(2, 8),
   new Tank(3, 8),

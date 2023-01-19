@@ -1,4 +1,4 @@
-export abstract class GameObject {
+export abstract class AbstractGameObject {
   x: number = 0
   y: number = 0
   tags: string[] = []
@@ -9,16 +9,18 @@ export abstract class GameObject {
   }
 }
 
-export abstract class Unit extends GameObject {
+export abstract class AbstractUnit extends AbstractGameObject {
   health: number = 0
+  maxHealth: number = 0
   damage: number = 0
   firerate: number = 0
   range: number = 0
   speed: number = 0
 }
 
-export class Tank extends Unit {
+export class Tank extends AbstractUnit {
   health = 1000
+  maxHealth = 1000
   damage = 30
   firerate = 1
   range = 3
@@ -26,8 +28,9 @@ export class Tank extends Unit {
   tags = ['tank']
 }
 
-export class Soldier extends Unit {
+export class Soldier extends AbstractUnit {
   health = 500
+  maxHealth = 500
   damage = 5
   firerate = 3
   range = 1
@@ -35,8 +38,9 @@ export class Soldier extends Unit {
   tags = ['soldier']
 }
 
-export class Sniper extends Unit {
+export class Sniper extends AbstractUnit {
   health = 400
+  maxHealth = 400
   damage = 25
   firerate = 2
   range = 5
@@ -44,10 +48,11 @@ export class Sniper extends Unit {
   tags = ['sniper']
 }
 
-export class Base extends Unit {
-  health = 10000
+export class Base extends AbstractUnit {
+  health = 5000
+  maxHealth = 5000
   damage = 10
-  firerate = 1
+  firerate = 3
   range = 1
   tags = ['base']
 }
