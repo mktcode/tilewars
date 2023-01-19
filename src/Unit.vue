@@ -7,8 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grow flex flex-col">
-    <slot />
-    <div :class="`mt-auto bg-lime-300 h-2`" :style="`width: ${ Math.floor(unit.health / unit.maxHealth * 100) }%;`"></div>
+  <div class="grow flex flex-col items-center justify-center rounded-xl border-4 border-white">
+    {{ unit.health }}
   </div>
 </template>

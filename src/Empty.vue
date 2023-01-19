@@ -1,3 +1,3 @@
 <template>
-  <div class="grow flex flex-col bg-gray-100"></div>
+  <div class="grow flex flex-col bg-gray-50"></div>
 </template>

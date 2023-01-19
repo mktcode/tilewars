@@ -8,7 +8,5 @@ defineProps<{
 </script>
 
 <template>
-  <Unit class="bg-sky-300" :unit="unit">
-    <div>Soldier</div>
-  </Unit>
+  <Unit :unit="unit"></Unit>
 </template>

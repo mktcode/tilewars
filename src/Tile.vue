@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { useState } from '@/game/state';
-import { computed, ref } from 'vue';
-import Tank from '@/Tank.vue';
-import Soldier from '@/Soldier.vue';
-import Sniper from '@/Sniper.vue';
-import Base from '@/Base.vue';
+import { computed } from 'vue';
+import Unit from '@/Unit.vue';
 import Empty from '@/Empty.vue';
 
 const props = defineProps<{
@@ -14,32 +11,22 @@ const props = defineProps<{
 
 const { player1Units, player2Units } = useState();
 
-const borderColor = ref('border-gray-300');
-
-const unit = computed(() => {
-  const player1Unit = player1Units.value.find((unit) => unit.x === props.x && unit.y === props.y && unit.health > 0);
-  if (player1Unit) {
-    borderColor.value = 'border-blue-500';
-    return player1Unit;
-  }
-  const player2Unit = player2Units.value.find((unit) => unit.x === props.x && unit.y === props.y && unit.health > 0);
-  if (player2Unit) {
-    borderColor.value = 'border-red-500';
-    return player2Unit;
-  }
-
-  borderColor.value = 'border-gray-300';
-  return null;
-});
+const player1Unit = computed(() => player1Units.value.find((unit) => unit.x === props.x && unit.y === props.y && unit.health > 0));
+const player2Unit = computed(() => player2Units.value.find((unit) => unit.x === props.x && unit.y === props.y && unit.health > 0));
+const unit = computed(() => player1Unit.value || player2Unit.value);
+const baseColor = computed(() => player1Unit.value ? 'bg-yellow-900' : 'bg-violet-900');
+const tankColor = computed(() => player1Unit.value ? 'bg-yellow-500' : 'bg-violet-500');
+const soldierColor = computed(() => player1Unit.value ? 'bg-yellow-400' : 'bg-violet-400');
+const sniperColor = computed(() => player1Unit.value ? 'bg-yellow-300' : 'bg-violet-300');
 </script>
 
 <template>
-  <div :class="`flex rounded-xl overflow-hidden text-white text-xs w-14 h-14 border-2 ${borderColor}`">
+  <div :class="`flex rounded-xl overflow-hidden bg-white text-white text-xs w-14 h-14 shadow-md border-b-4`">
     <template v-if="unit">
-      <Tank v-if="unit.tags.includes('tank')" :unit="unit" />
-      <Soldier v-if="unit.tags.includes('soldier')" :unit="unit" />
-      <Sniper v-if="unit.tags.includes('sniper')" :unit="unit" />
-      <Base v-if="unit.tags.includes('base')" :unit="unit" />
+      <Unit v-if="unit.tags.includes('base')" :unit="unit" :class="baseColor" />
+      <Unit v-if="unit.tags.includes('tank')" :unit="unit" :class="tankColor" />
+      <Unit v-if="unit.tags.includes('soldier')" :unit="unit" :class="soldierColor" />
+      <Unit v-if="unit.tags.includes('sniper')" :unit="unit" :class="sniperColor" />
     </template>
     <Empty v-else />
   </div>

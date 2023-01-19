@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  @apply bg-slate-100;
+}
+
 button {
-  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded;
+  @apply flex items-center justify-center rounded-xl overflow-hidden bg-white text-gray-500 text-xs font-bold px-4 py-3 shadow-md border-b-4
 }

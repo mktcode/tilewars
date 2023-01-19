@@ -36,32 +36,39 @@ const toggleIsPlaying = () => {
     nextTurn();
   }
 };
+
+const reload = () => {
+  window.location.reload();
+};
 </script>
 
 <template>
-  <main class="max-w-5xl mx-auto">
-    <h1 class="text-5xl font-bold text-center my-10">Tile Wars!</h1>
+  <main class="flex flex-col max-w-5xl mx-auto min-h-screen items-center justify-center">
     <div class="flex flex-col items-center">
       <div v-for="y in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]" class="flex">
         <div v-for="x in [1, 2, 3, 4, 5]">
-          <Tile class="m-1" :x="x" :y="y" />
+          <Tile class="my-[1px] mx-1" :x="x" :y="y" />
         </div>
       </div>
     </div>
-    <div class="text-center mt-5 space-x-1">
-      <button @click="nextTurn">>|</button>
-      <button @click="toggleIsPlaying()">
-        <template v-if="isPlaying">||</template>
-        <template v-else>></template>
-      </button>
-      <button v-if="isPlaying" @click="toggleSpeed()">
-        <template v-if="playSpeed === PLAYSPEED.Slow">x2</template>
-        <template v-else-if="playSpeed === PLAYSPEED.Medium">x3</template>
-        <template v-else>x1</template>
-      </button>
-    </div>
-    <div class="text-center">
-      Turn: {{ turnCount }}
+    <div class="flex text-center mt-5 w-80 p-1">
+      <div class="flex space-x-2">
+        <button v-if="!isPlaying" @click="nextTurn">next turn</button>
+        <button @click="toggleIsPlaying()">
+          <template v-if="isPlaying">pause</template>
+          <template v-else>play</template>
+        </button>
+        <button v-if="isPlaying" @click="toggleSpeed()">
+          <template v-if="playSpeed === PLAYSPEED.Slow">x2</template>
+          <template v-else-if="playSpeed === PLAYSPEED.Medium">x3</template>
+          <template v-else>x1</template>
+        </button>
+        <button @click="reload">new</button>
+      </div>
+      <div class="text-right font-bold ml-auto">
+        <div class="text-xs text-gray-500">Turn</div>
+        <div class="text-xl text-gray-300">{{ turnCount }}</div>
+      </div>
     </div>
   </main>
 </template>
