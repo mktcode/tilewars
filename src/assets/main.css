@@ -7,7 +7,7 @@ body {
 }
 
 button {
-  @apply flex items-center justify-center rounded-xl overflow-hidden bg-white text-gray-500 text-xs font-bold px-4 py-3 shadow-md border-b-4
+  @apply flex items-center justify-center rounded-xl overflow-hidden bg-white text-gray-500 text-xs font-bold px-4 py-3 shadow border-b-4 hover:shadow hover:shadow-gray-500 mb-[2px] active:mt-[2px] active:mb-0 transition-all;
 }
 
 button:disabled {

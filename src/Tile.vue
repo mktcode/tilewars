@@ -25,13 +25,15 @@ const tankColor = computed(() => player1Unit.value ? 'from-orange-700 to-orange-
 const soldierColor = computed(() => player1Unit.value ? 'from-orange-500 to-orange-400' : 'from-indigo-500 to-indigo-400');
 const sniperColor = computed(() => player1Unit.value ? 'from-orange-300 to-orange-200' : 'from-indigo-300 to-indigo-200');
 
-const shadow = computed(() => isBase.value ? 'shadow-xl shadow-gray-500' : 'shadow-lg shadow-gray-400');
+const baseStyle = computed(() => isBase.value ? '' : '');
 </script>
 
 <template>
-  <div :class="`flex rounded-xl overflow-hidden bg-white text-white text-xs w-14 h-14 border-b-4 ${shadow}`">
+  <div :class="`flex rounded-xl overflow-hidden bg-white text-white text-xs w-14 h-14 border-b-4 mt-1 shadow-md shadow-gray-600 hover:mt-0 hover:shadow-lg hover:shadow-gray-400 transition-all ${baseStyle}`">
     <template v-if="unit">
-      <Unit v-if="isBase" :unit="unit" :class="baseColor" />
+      <Unit v-if="isBase" :unit="unit" :class="baseColor">
+        <div class="text-lg leading-none">*</div>
+      </Unit>
       <Unit v-if="isTank" :unit="unit" :class="tankColor" />
       <Unit v-if="isSoldier" :unit="unit" :class="soldierColor" />
       <Unit v-if="isSniper" :unit="unit" :class="sniperColor" />

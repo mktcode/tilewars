@@ -51,7 +51,7 @@ const reload = () => {
         </div>
       </div>
     </div>
-    <div class="flex space-x-2 w-80 p-1">
+    <div class="flex space-x-2 w-80 p-1 mt-3">
       <button class="grow" @click="toggleIsPlaying()">
         <template v-if="isPlaying">pause</template>
         <template v-else>play</template>

@@ -3,8 +3,29 @@ import { computed, ref } from 'vue';
 import { useState } from './game/state';
 import Game from './Game.vue';
 import Tile from './Tile.vue';
+import type { AbstractUnit } from './game/objects';
 
 const { player1Units, player2Units } = useState();
+
+const getRandomNumberBetween = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+const twoRandomPlayer2Units = computed(() => {
+  if (player2Units.value.length < 2) return player2Units.value;
+  
+  let randomIndex1;
+  let randomIndex2;
+
+  do {
+    randomIndex1 = getRandomNumberBetween(0, player2Units.value.length - 1);
+    randomIndex2 = getRandomNumberBetween(0, player2Units.value.length - 1);
+  } while (randomIndex1 === randomIndex2);
+
+  return [player2Units.value[randomIndex1], player2Units.value[randomIndex2]];
+});
+
+
 
 const lastUnitPlacement = localStorage.getItem('lastUnitPlacement');
 if (lastUnitPlacement) {
@@ -63,9 +84,16 @@ const start = () => {
     <Game v-if="isGameStarted" />
     <template v-else>
       <div class="flex flex-col items-center">
-        <div v-for="y in [5, 4, 3, 2, 1]" class="flex">
+        <div v-for="y in [10, 9, 8, 7, 6]" class="flex">
           <div v-for="x in [1, 2, 3, 4, 5]">
-            <div class="flex rounded-xl w-14 h-14 mx-1 my-[1px] opacity-40 justify-center items-center font-extrabold text-slate-400 text-2xl">
+            <Tile
+            v-if="twoRandomPlayer2Units.some((unit) => unit.x === x && unit.y === y)"
+            class="my-[1px] mx-1"
+            :x="x"
+            :y="y"
+            @click="cycleUnit(x, y)"
+            />
+            <div v-else class="flex rounded-xl w-14 h-14 mx-1 my-[1px] opacity-40 justify-center items-center font-extrabold text-slate-400 text-2xl">
               ?
             </div>
           </div>
@@ -76,11 +104,11 @@ const start = () => {
           <Tile class="my-[1px] mx-1" :x="x" :y="y" @click="cycleUnit(x, y)" />
         </div>
       </div>
-      <div class="flex border rounded-xl p-2 mt-5 space-x-2">
-        <div :class="`${availableBasesCount ? '' : 'opacity-50'} bg-gradient-to-t from-orange-900 to-orange-800 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableBasesCount }}</div>
-        <div :class="`${availableTanksCount ? '' : 'opacity-50'} bg-gradient-to-t from-orange-700 to-orange-600 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableTanksCount }}</div>
-        <div :class="`${availableSoldiersCount ? '' : 'opacity-50'} bg-gradient-to-t from-orange-500 to-orange-400 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableSoldiersCount}}</div>
-        <div :class="`${availableSnipersCount ? '' : 'opacity-50'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableSnipersCount }}</div>
+      <div class="flex border-4 border-slate-400 rounded-xl p-2 mt-5 space-x-2">
+        <div :class="`${availableBasesCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-900 to-orange-800 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableBasesCount }}</div>
+        <div :class="`${availableTanksCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-700 to-orange-600 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableTanksCount }}</div>
+        <div :class="`${availableSoldiersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-500 to-orange-400 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableSoldiersCount}}</div>
+        <div :class="`${availableSnipersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableSnipersCount }}</div>
       </div>
       <div class="text-center mt-5">
         <button @click="start" :disabled="!canStart">Start game</button>
