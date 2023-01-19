@@ -2,17 +2,17 @@ import { computed, ref } from 'vue';
 import { AbstractUnit, Base, Tank, Soldier, Sniper } from '@/game/objects';
 
 const player1Units = ref<AbstractUnit[]>([
-  new Base(3, 1),
-  new Tank(2, 2),
-  new Tank(3, 2),
-  new Tank(4, 2),
-  new Soldier(2, 3),
-  new Soldier(3, 3),
-  new Soldier(4, 3),
-  new Soldier(1, 2),
-  new Soldier(5, 2),
-  new Sniper(2, 1),
-  new Sniper(4, 1),
+  new Base(),
+  new Tank(),
+  new Tank(),
+  new Tank(),
+  new Soldier(),
+  new Soldier(),
+  new Soldier(),
+  new Soldier(),
+  new Soldier(),
+  new Sniper(),
+  new Sniper(),
 ])
 
 const player2Units = ref<AbstractUnit[]>([

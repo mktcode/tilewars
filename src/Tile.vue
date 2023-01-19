@@ -21,7 +21,7 @@ const sniperColor = computed(() => player1Unit.value ? 'bg-yellow-300' : 'bg-vio
 </script>
 
 <template>
-  <div :class="`flex rounded-xl overflow-hidden bg-white text-white text-xs w-14 h-14 shadow-md border-b-4`">
+  <div class="flex rounded-xl overflow-hidden bg-white text-white text-xs w-14 h-14 shadow-md border-b-4">
     <template v-if="unit">
       <Unit v-if="unit.tags.includes('base')" :unit="unit" :class="baseColor" />
       <Unit v-if="unit.tags.includes('tank')" :unit="unit" :class="tankColor" />

@@ -1,74 +1,71 @@
 <script setup lang="ts">
-import Tile from '@/Tile.vue';
-import { PLAYSPEED, playTurn } from '@/game';
-import { useState } from '@/game/state';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useState } from './game/state';
+import Game from './Game.vue';
+import Tile from './Tile.vue';
 
-const { player1Units, player2Units, player1HasBase, player2HasBase } = useState();
+const { player1Units, player2Units } = useState();
 
-const turnCount = ref(0);
-const isPlaying = ref(false);
-const playSpeed = ref(PLAYSPEED.Slow)
+const canStart = computed(() => {
+  return (
+    player1Units.value.every((unit) => unit.x !== 0 && unit.y !== 0) &&
+    player2Units.value.every((unit) => unit.x !== 0 && unit.y !== 0)
+  );
+});
 
-const nextTurn = async() => {
-  turnCount.value += 1;
-  playTurn(turnCount.value, player1Units.value, player2Units.value);
-  if (player1HasBase.value && player2HasBase.value && isPlaying.value) {
-    await new Promise((resolve) => setTimeout(resolve, playSpeed.value));
-    nextTurn();
-  }
-};
+const isGameStarted = ref(false);
 
-const toggleSpeed = () => {
-  if (playSpeed.value === PLAYSPEED.Slow) {
-    playSpeed.value = PLAYSPEED.Medium;
-  } else if (playSpeed.value === PLAYSPEED.Medium) {
-    playSpeed.value = PLAYSPEED.Fast;
+const availableUnits = computed(() => player1Units.value.filter((unit) => unit.x === 0 || unit.y === 0));
+
+const cycleUnit = (x: number, y: number) => {
+  const currentUnit = player1Units.value.find((unit) => unit.x === x && unit.y === y);
+
+  if (currentUnit) {
+    const x = currentUnit.x;
+    const y = currentUnit.y;
+    const nextUnit = availableUnits.value[0];
+    
+    currentUnit.x = 0;
+    currentUnit.y = 0;
+    
+    if (nextUnit) {
+      if (currentUnit.tags.includes('sniper')) { // Toggle to empty tile after sniper
+        return;
+      }
+      nextUnit.x = x;
+      nextUnit.y = y;
+    }
   } else {
-    playSpeed.value = PLAYSPEED.Slow;
+    const nextUnit = availableUnits.value[0];
+    if (nextUnit) {
+      nextUnit.x = x;
+      nextUnit.y = y;
+    }
   }
-};
-
-const toggleIsPlaying = () => {
-  isPlaying.value = !isPlaying.value;
-  
-  if (isPlaying.value) {
-    nextTurn();
-  }
-};
-
-const reload = () => {
-  window.location.reload();
 };
 </script>
 
 <template>
   <main class="flex flex-col max-w-5xl mx-auto min-h-screen items-center justify-center">
-    <div class="flex flex-col items-center">
-      <div v-for="y in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]" class="flex">
-        <div v-for="x in [1, 2, 3, 4, 5]">
-          <Tile class="my-[1px] mx-1" :x="x" :y="y" />
+    <Game v-if="isGameStarted" />
+    <template v-else>
+      <div class="flex flex-col items-center mb-1">
+        <div v-for="y in [5, 4, 3, 2, 1]" class="flex">
+          <div v-for="x in [1, 2, 3, 4, 5]">
+            <div class="flex rounded-xl w-14 h-14 m-1 opacity-40 justify-center items-center font-extrabold text-gray-300 text-2xl">
+              ?
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex text-center mt-5 w-80 p-1">
-      <div class="flex space-x-2">
-        <button v-if="!isPlaying" @click="nextTurn">next turn</button>
-        <button @click="toggleIsPlaying()">
-          <template v-if="isPlaying">pause</template>
-          <template v-else>play</template>
-        </button>
-        <button v-if="isPlaying" @click="toggleSpeed()">
-          <template v-if="playSpeed === PLAYSPEED.Slow">x2</template>
-          <template v-else-if="playSpeed === PLAYSPEED.Medium">x3</template>
-          <template v-else>x1</template>
-        </button>
-        <button @click="reload">new</button>
+      <div v-for="y in [5, 4, 3, 2, 1]" class="flex">
+        <div v-for="x in [1, 2, 3, 4, 5]">
+          <Tile class="my-[1px] mx-1" :x="x" :y="y" @click="cycleUnit(x, y)" />
+        </div>
       </div>
-      <div class="text-right font-bold ml-auto">
-        <div class="text-xs text-gray-500">Turn</div>
-        <div class="text-xl text-gray-300">{{ turnCount }}</div>
+      <div class="text-center mt-5">
+        <button @click="isGameStarted = true" :disabled="!canStart">Start game</button>
       </div>
-    </div>
+    </template>
   </main>
 </template>

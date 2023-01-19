@@ -9,3 +9,7 @@ body {
 button {
   @apply flex items-center justify-center rounded-xl overflow-hidden bg-white text-gray-500 text-xs font-bold px-4 py-3 shadow-md border-b-4
 }
+
+button:disabled {
+  @apply text-gray-200;
+}
