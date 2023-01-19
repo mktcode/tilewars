@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="grow flex flex-col items-center justify-center rounded-xl border-4 border-white text-white text-opacity-70 font-bold">
+  <div class="grow flex flex-col items-center justify-center rounded-xl border-4 border-white text-white text-opacity-70 font-bold bg-gradient-to-t">
     {{ unit.health }}
   </div>
 </template>
