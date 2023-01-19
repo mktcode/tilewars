@@ -19,24 +19,20 @@ const availableUnits = computed(() => player1Units.value.filter((unit) => unit.x
 
 const cycleUnit = (x: number, y: number) => {
   const currentUnit = player1Units.value.find((unit) => unit.x === x && unit.y === y);
+  const nextUnit = availableUnits.value[0];
 
   if (currentUnit) {
     const x = currentUnit.x;
     const y = currentUnit.y;
-    const nextUnit = availableUnits.value[0];
     
     currentUnit.x = 0;
     currentUnit.y = 0;
     
     if (nextUnit) {
-      if (currentUnit.tags.includes('sniper')) { // Toggle to empty tile after sniper
-        return;
-      }
       nextUnit.x = x;
       nextUnit.y = y;
     }
   } else {
-    const nextUnit = availableUnits.value[0];
     if (nextUnit) {
       nextUnit.x = x;
       nextUnit.y = y;
