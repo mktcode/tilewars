@@ -42,13 +42,13 @@ const cycleUnit = (x: number, y: number) => {
 </script>
 
 <template>
-  <main class="flex flex-col max-w-5xl mx-auto min-h-screen items-center justify-center">
+  <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-10">
     <Game v-if="isGameStarted" />
     <template v-else>
-      <div class="flex flex-col items-center mb-1">
+      <div class="flex flex-col items-center">
         <div v-for="y in [5, 4, 3, 2, 1]" class="flex">
           <div v-for="x in [1, 2, 3, 4, 5]">
-            <div class="flex rounded-xl w-14 h-14 m-1 opacity-40 justify-center items-center font-extrabold text-gray-300 text-2xl">
+            <div class="flex rounded-xl w-14 h-14 mx-1 my-[1px] opacity-40 justify-center items-center font-extrabold text-gray-300 text-2xl">
               ?
             </div>
           </div>
