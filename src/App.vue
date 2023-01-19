@@ -105,10 +105,10 @@ const start = () => {
         </div>
       </div>
       <div class="flex border-4 border-slate-400 rounded-xl p-2 mt-5 space-x-2">
-        <div :class="`${availableBasesCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-900 to-orange-800 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableBasesCount }}</div>
-        <div :class="`${availableTanksCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-700 to-orange-600 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableTanksCount }}</div>
-        <div :class="`${availableSoldiersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-500 to-orange-400 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableSoldiersCount}}</div>
-        <div :class="`${availableSnipersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableSnipersCount }}</div>
+        <div :class="`${availableBasesCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-900 to-orange-800 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableBasesCount }}</div>
+        <div :class="`${availableTanksCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-700 to-orange-600 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableTanksCount }}</div>
+        <div :class="`${availableSoldiersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-500 to-orange-400 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableSoldiersCount}}</div>
+        <div :class="`${availableSnipersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableSnipersCount }}</div>
       </div>
       <div class="text-center mt-5">
         <button @click="start" :disabled="!canStart">Start game</button>
