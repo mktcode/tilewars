@@ -65,8 +65,8 @@ const reload = () => {
       <button @click="reload">new game</button>
     </div>
     <div class="text-center font-bold ml-auto mt-5">
-      <div class="text-xs text-gray-500">Turn</div>
-      <div class="text-4xl text-gray-300">{{ turnCount }}</div>
+      <div class="text-xs text-slate-600">Turn</div>
+      <div class="text-4xl text-slate-400">{{ turnCount }}</div>
     </div>
   </div>
 </template>
