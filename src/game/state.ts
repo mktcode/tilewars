@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { AbstractUnit, Base, Tank, Soldier, Sniper } from '@/game/objects';
 
 const player1Units = ref<AbstractUnit[]>([
@@ -29,9 +29,14 @@ const player2Units = ref<AbstractUnit[]>([
   new Sniper(4, 10),
 ])
 
+const player1HasBase = computed(() => player1Units.value.find((unit) => unit.health > 0 && unit.tags.includes('base')));
+const player2HasBase = computed(() => player2Units.value.find((unit) => unit.health > 0 && unit.tags.includes('base')));
+
 export function useState() {
   return {
     player1Units,
     player2Units,
+    player1HasBase,
+    player2HasBase,
   }
 }

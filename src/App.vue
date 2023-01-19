@@ -4,7 +4,7 @@ import { PLAYSPEED, playTurn } from '@/game';
 import { useState } from '@/game/state';
 import { ref } from 'vue';
 
-const { player1Units, player2Units } = useState();
+const { player1Units, player2Units, player1HasBase, player2HasBase } = useState();
 
 const turnCount = ref(0);
 const isPlaying = ref(false);
@@ -13,7 +13,7 @@ const playSpeed = ref(PLAYSPEED.Slow)
 const nextTurn = async() => {
   turnCount.value += 1;
   playTurn(turnCount.value, player1Units.value, player2Units.value);
-  if (isPlaying.value) {
+  if (player1HasBase.value && player2HasBase.value && isPlaying.value) {
     await new Promise((resolve) => setTimeout(resolve, playSpeed.value));
     nextTurn();
   }
