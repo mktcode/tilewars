@@ -24,10 +24,10 @@ const unit = computed(() => {
 <template>
   <div class="flex rounded-xl text-white text-xs w-14 h-14">
     <template v-if="unit && unit.health > 0">
-      <Tank v-if="unit.tags.includes('tank')">{{ unit.health }}</Tank>
-      <Soldier v-if="unit.tags.includes('soldier')">{{ unit.health }}</Soldier>
-      <Sniper v-if="unit.tags.includes('sniper')">{{ unit.health }}</Sniper>
-      <Base v-if="unit.tags.includes('base')">{{ unit.health }}</Base>
+      <Tank v-if="unit.tags.includes('tank')">{{ unit.health }}/{{ unit.damage }}</Tank>
+      <Soldier v-if="unit.tags.includes('soldier')">{{ unit.health }}/{{ unit.damage }}</Soldier>
+      <Sniper v-if="unit.tags.includes('sniper')">{{ unit.health }}/{{ unit.damage }}</Sniper>
+      <Base v-if="unit.tags.includes('base')">{{ unit.health }}/{{ unit.damage }}</Base>
     </template>
     <Empty v-else />
   </div>

@@ -18,25 +18,25 @@ export abstract class Unit extends GameObject {
 }
 
 export class Tank extends Unit {
-  health = 100
+  health = 1000
   damage = 30
-  firerate = 3
+  firerate = 1
   range = 3
   speed = 2
   tags = ['tank']
 }
 
 export class Soldier extends Unit {
-  health = 50
+  health = 500
   damage = 5
-  firerate = 1
+  firerate = 3
   range = 1
-  speed = 1
+  speed = 3
   tags = ['soldier']
 }
 
 export class Sniper extends Unit {
-  health = 40
+  health = 400
   damage = 25
   firerate = 2
   range = 5
@@ -45,7 +45,7 @@ export class Sniper extends Unit {
 }
 
 export class Base extends Unit {
-  health = 1000
+  health = 10000
   damage = 10
   firerate = 1
   range = 1
