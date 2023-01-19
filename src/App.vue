@@ -6,6 +6,15 @@ import Tile from './Tile.vue';
 
 const { player1Units, player2Units } = useState();
 
+const lastUnitPlacement = localStorage.getItem('lastUnitPlacement');
+if (lastUnitPlacement) {
+  try {
+    player1Units.value = JSON.parse(lastUnitPlacement);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 const canStart = computed(() => {
   return (
     player1Units.value.every((unit) => unit.x !== 0 && unit.y !== 0) &&
@@ -42,6 +51,11 @@ const cycleUnit = (x: number, y: number) => {
     }
   }
 };
+
+const start = () => {
+  isGameStarted.value = true;
+  localStorage.setItem('lastUnitPlacement', JSON.stringify(player1Units.value));
+};
 </script>
 
 <template>
@@ -69,7 +83,7 @@ const cycleUnit = (x: number, y: number) => {
         <div :class="`${availableSnipersCount ? '' : 'opacity-50'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">{{ availableSnipersCount }}</div>
       </div>
       <div class="text-center mt-5">
-        <button @click="isGameStarted = true" :disabled="!canStart">Start game</button>
+        <button @click="start" :disabled="!canStart">Start game</button>
       </div>
     </template>
   </main>
