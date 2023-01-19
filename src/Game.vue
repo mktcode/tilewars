@@ -62,7 +62,7 @@ const reload = () => {
         <template v-else-if="playSpeed === PLAYSPEED.Medium">fastest</template>
         <template v-else>slow</template>
       </button>
-      <button @click="reload">new</button>
+      <button @click="reload">new game</button>
     </div>
     <div class="text-center font-bold ml-auto mt-5">
       <div class="text-xs text-gray-500">Turn</div>
