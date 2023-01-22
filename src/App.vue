@@ -111,10 +111,22 @@ const resetPlayer1Units = () => {
         </div>
       </div>
       <div class="flex border-4 border-slate-400 rounded-xl p-2 mt-5 space-x-2">
-        <div :class="`${availableBasesCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-900 to-orange-800 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableBasesCount }}</div>
-        <div :class="`${availableTanksCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-700 to-orange-600 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableTanksCount }}</div>
-        <div :class="`${availableSoldiersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-500 to-orange-400 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableSoldiersCount}}</div>
-        <div :class="`${availableSnipersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableSnipersCount }}</div>
+        <div :class="`${availableBasesCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-900 to-orange-800 rounded-xl flex flex-col items-center justify-center p-2 font-bold text-sm text-white`">
+          <span>&times;{{ availableBasesCount }}</span>
+          <span>Base</span>
+        </div>
+        <div :class="`${availableTanksCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-700 to-orange-600 rounded-xl flex flex-col items-center justify-center p-2 font-bold text-sm text-white`">
+          <span>&times;{{ availableTanksCount }}</span>
+          <span>Tank</span>
+        </div>
+        <div :class="`${availableSoldiersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-500 to-orange-400 rounded-xl flex flex-col items-center justify-center p-2 font-bold text-sm text-white`">
+          <span>&times;{{ availableSoldiersCount}}</span>
+          <span>Soldier</span>
+        </div>
+        <div :class="`${availableSnipersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl flex flex-col items-center justify-center p-2 font-bold text-sm text-white`">
+          <span>&times;{{ availableSnipersCount }}</span>
+          <span>Sniper</span>
+        </div>
       </div>
       <div class="flex space-x-3 text-center mt-5">
         <button @click="start" :disabled="!canStart">Start game</button>
