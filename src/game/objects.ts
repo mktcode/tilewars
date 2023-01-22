@@ -43,7 +43,7 @@ export class Sniper extends AbstractUnit {
   maxHealth = 400
   damage = 25
   firerate = 2
-  range = 5
+  range = 4
   speed = 1
   tags = ['sniper']
 }
