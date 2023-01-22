@@ -3,7 +3,6 @@ import { computed, ref } from 'vue';
 import { useState } from './game/state';
 import Game from './Game.vue';
 import Tile from './Tile.vue';
-import type { AbstractUnit } from './game/objects';
 
 const { player1Units, player2Units } = useState();
 
