@@ -9,6 +9,7 @@ export enum PLAYSPEED {
   Slow = 1000,
   Medium = 500,
   Fast = 100,
+  Plaid = 10,
 }
 
 const MAX_SPEED = 3

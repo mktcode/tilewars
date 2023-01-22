@@ -24,7 +24,9 @@ const toggleSpeed = () => {
     playSpeed.value = PLAYSPEED.Medium;
   } else if (playSpeed.value === PLAYSPEED.Medium) {
     playSpeed.value = PLAYSPEED.Fast;
-  } else {
+  } else if (playSpeed.value === PLAYSPEED.Fast) {
+    playSpeed.value = PLAYSPEED.Plaid;
+  } else if (playSpeed.value === PLAYSPEED.Plaid) {
     playSpeed.value = PLAYSPEED.Slow;
   }
 };
@@ -59,7 +61,8 @@ const reload = () => {
       <button v-if="!isPlaying" @click="nextTurn">next turn</button>
       <button v-if="isPlaying" @click="toggleSpeed()">
         <template v-if="playSpeed === PLAYSPEED.Slow">faster</template>
-        <template v-else-if="playSpeed === PLAYSPEED.Medium">fastest</template>
+        <template v-else-if="playSpeed === PLAYSPEED.Medium">faster</template>
+        <template v-else-if="playSpeed === PLAYSPEED.Fast">fastest</template>
         <template v-else>slow</template>
       </button>
       <button @click="reload">new game</button>
