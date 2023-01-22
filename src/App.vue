@@ -76,6 +76,13 @@ const start = () => {
   isGameStarted.value = true;
   localStorage.setItem('lastUnitPlacement', JSON.stringify(player1Units.value));
 };
+
+const resetPlayer1Units = () => {
+  player1Units.value.forEach((unit) => {
+    unit.x = 0;
+    unit.y = 0;
+  });
+};
 </script>
 
 <template>
@@ -109,8 +116,9 @@ const start = () => {
         <div :class="`${availableSoldiersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-500 to-orange-400 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableSoldiersCount}}</div>
         <div :class="`${availableSnipersCount ? '' : 'opacity-20'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl w-10 h-10 flex items-center justify-center font-bold text-sm text-white`">&times;{{ availableSnipersCount }}</div>
       </div>
-      <div class="text-center mt-5">
+      <div class="flex space-x-3 text-center mt-5">
         <button @click="start" :disabled="!canStart">Start game</button>
+        <button @click="resetPlayer1Units">Reset units</button>
       </div>
     </template>
   </main>
