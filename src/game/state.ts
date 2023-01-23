@@ -54,14 +54,17 @@ const player2Base = computed(() => player2Units.value.find((unit) => unit.tags.i
 const player1BaseAlive = computed(() => player1Base.value.health > 0);
 const player2BaseAlive = computed(() => player2Base.value.health > 0);
 
+const focussedTarget = ref<AbstractUnit | null>(null);
+
 export function useState() {
   return {
+    level,
     player1Units,
     player2Units,
     player1Base,
     player2Base,
     player1BaseAlive,
     player2BaseAlive,
-    level,
+    focussedTarget,
   }
 }

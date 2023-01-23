@@ -1,4 +1,7 @@
 import type { AbstractUnit } from '@/game/objects'
+import { useState } from '@/game/state'
+
+const { focussedTarget } = useState()
 
 export enum DIRECTION {
   Up,
@@ -46,7 +49,7 @@ const dealDamage = (turnCount: number, units: AbstractUnit[], enemyUnits: Abstra
     const firerateAllowsAttack = unit.firerate > 0 && turnCount % (1 + MAX_FIRERATE - unit.firerate) === 0
     if (!firerateAllowsAttack) return
 
-    const closestLivingEnemyInRange = enemyUnits
+    const livingEnemyUnitsInRage = enemyUnits
       .filter(enemy => enemy.health > 0)
       .filter(enemy => enemy.x <= unit.x + unit.range && enemy.x >= unit.x - unit.range)
       .filter(enemy => enemy.y <= unit.y + unit.range && enemy.y >= unit.y - unit.range)
@@ -54,12 +57,19 @@ const dealDamage = (turnCount: number, units: AbstractUnit[], enemyUnits: Abstra
         const aDistance = Math.abs(a.x - unit.x) + Math.abs(a.y - unit.y)
         const bDistance = Math.abs(b.x - unit.x) + Math.abs(b.y - unit.y)
         return aDistance - bDistance
-      })[0]
-    
-    if (!closestLivingEnemyInRange) return
-    
-    closestLivingEnemyInRange.health -= unit.damage
-    if (closestLivingEnemyInRange.health < 0) closestLivingEnemyInRange.health = 0
+      })
+      
+    if (livingEnemyUnitsInRage.length === 0) return
+
+    let enemyToAttack = livingEnemyUnitsInRage[0]
+
+    if (focussedTarget.value) {
+      const focussedTargetIsInRange =  livingEnemyUnitsInRage.find((enemy) => enemy === focussedTarget.value)
+      if (focussedTargetIsInRange) enemyToAttack = focussedTarget.value
+    }
+
+    enemyToAttack.health -= unit.damage
+    if (enemyToAttack.health < 0) enemyToAttack.health = 0
   })
 }
 
