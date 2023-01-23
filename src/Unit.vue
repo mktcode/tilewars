@@ -5,15 +5,23 @@ import CrosshairsIcon from './icons/Crosshairs.vue';
 
 const { focussedTarget } = useState();
 
-defineProps<{
+const props = defineProps<{
   unit: AbstractUnit;
 }>();
+
+function toggleFocus() {
+  if (focussedTarget.value === props.unit) {
+    focussedTarget.value = null;
+  } else {
+    focussedTarget.value = props.unit;
+  }
+}
 </script>
 
 <template>
   <div
     :class="`grow flex flex-col items-center justify-center rounded-xl border-4 border-white text-white text-opacity-70 font-bold bg-gradient-to-t cursor-pointer`"
-    @click="focussedTarget = unit"
+    @click="toggleFocus"
   >
     <div class="text-xs leading-none capitalize">{{ unit.tags[0] }}</div>
     <div class="w-10 mt-1">
