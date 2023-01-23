@@ -1,0 +1,3 @@
+<template>
+  <svg class="inline" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><title>fast-forward</title><path d="M13,6V18L21.5,12M4,18L12.5,12L4,6V18Z" /></svg>
+</template>

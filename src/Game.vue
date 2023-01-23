@@ -3,6 +3,9 @@ import Tile from '@/Tile.vue';
 import { PLAYSPEED, playTurn } from '@/game';
 import { useState } from '@/game/state';
 import { ref } from 'vue';
+import FastForwardIcon from './icons/FastForward.vue';
+import Play from './icons/Play.vue';
+import Pause from './icons/Pause.vue';
 
 const { player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive } = useState();
 
@@ -116,15 +119,12 @@ const nextLevel = () => {
 
     <div v-if="!gameEnded" class="flex space-x-2 w-80 p-1 mt-3">
       <button class="grow" @click="toggleIsPlaying()">
-        <template v-if="isPlaying">pause</template>
-        <template v-else>play</template>
+        <template v-if="isPlaying"><Pause width="24" height="24" /></template>
+        <template v-else><Play width="24" height="24" /></template>
       </button>
       <button v-if="!isPlaying" @click="nextTurn">next turn</button>
       <button v-if="isPlaying" @click="toggleSpeed()">
-        <template v-if="playSpeed === PLAYSPEED.Slow">faster</template>
-        <template v-else-if="playSpeed === PLAYSPEED.Medium">faster</template>
-        <template v-else-if="playSpeed === PLAYSPEED.Fast">fastest</template>
-        <template v-else>slow</template>
+        <FastForwardIcon width="24" height="24" />
       </button>
       <button @click="reload">new game</button>
     </div>
