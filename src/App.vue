@@ -4,7 +4,7 @@ import { useState } from './game/state';
 import Game from './Game.vue';
 import Tile from './Tile.vue';
 
-const { player1Units, player2Units } = useState();
+const { player1Units, player2Units, level } = useState();
 
 const getRandomNumberBetween = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -86,7 +86,8 @@ const resetPlayer1Units = () => {
 </script>
 
 <template>
-  <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-24">
+  <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-10">
+    <h1 class="text-3xl font-bold text-slate-400 mb-4">Level {{ level }}</h1>
     <Game v-if="isGameStarted" />
     <template v-else>
       <div class="flex flex-col items-center">

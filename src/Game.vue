@@ -4,16 +4,56 @@ import { PLAYSPEED, playTurn } from '@/game';
 import { useState } from '@/game/state';
 import { ref } from 'vue';
 
-const { player1Units, player2Units, player1HasBase, player2HasBase } = useState();
+const { player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive } = useState();
 
 const turnCount = ref(0);
 const isPlaying = ref(false);
 const playSpeed = ref(PLAYSPEED.Slow)
+const player1Wins = ref(false);
+const player2Wins = ref(false);
+const gameEnded = ref(false);
 
 const nextTurn = async() => {
   turnCount.value += 1;
   playTurn(turnCount.value, player1Units.value, player2Units.value);
-  if (player1HasBase.value && player2HasBase.value && isPlaying.value) {
+
+  // move to state.ts
+  const player1UnitsHealthSum = player1Units.value.reduce((sum, unit) => sum + unit.health, 0);
+  const player2UnitsHealthSum = player2Units.value.reduce((sum, unit) => sum + unit.health, 0);
+
+  const player1UnitsInXRangeOfPlayer2Base = player1Units.value.filter((unit) => unit.range >= Math.abs(unit.x - player2Base.value.x));
+  const player2UnitsInXRangeOfPlayer1Base = player2Units.value.filter((unit) => unit.range >= Math.abs(unit.x - player1Base.value.x));
+  
+  if (player1UnitsHealthSum + player2UnitsHealthSum === 0) {
+    isPlaying.value = false;
+    gameEnded.value = true;
+  }
+  
+  if (player1BaseAlive.value && !player2BaseAlive.value) {
+    player1Wins.value = true;
+    isPlaying.value = false;
+    gameEnded.value = true;
+  }
+  
+  if (!player1BaseAlive.value && player2BaseAlive.value) {
+    player2Wins.value = true;
+    isPlaying.value = false;
+    gameEnded.value = true;
+  }
+
+  if (
+    player1Units.value.every((unit) => unit.y === 10) &&
+    player2Units.value.every((unit) => unit.y === 1) &&
+    player1UnitsInXRangeOfPlayer2Base.length === 0 &&
+    player2UnitsInXRangeOfPlayer1Base.length === 0
+  ) {
+    player1Wins.value = player1UnitsHealthSum > player2UnitsHealthSum;
+    player2Wins.value = player2UnitsHealthSum > player1UnitsHealthSum;
+    isPlaying.value = false;
+    gameEnded.value = true;
+  }
+  
+  if (isPlaying.value && !gameEnded.value) {
     await new Promise((resolve) => setTimeout(resolve, playSpeed.value));
     nextTurn();
   }
@@ -42,6 +82,11 @@ const toggleIsPlaying = () => {
 const reload = () => {
   window.location.reload();
 };
+
+const nextLevel = () => {
+  localStorage.setItem('level', (Number(localStorage.getItem('level')) + 1).toString());
+  window.location.reload();
+}
 </script>
 
 <template>
@@ -53,7 +98,23 @@ const reload = () => {
         </div>
       </div>
     </div>
-    <div class="flex space-x-2 w-80 p-1 mt-3">
+
+    <div v-if="gameEnded" class="flex flex-col items-center space-y-3 mt-5">
+      <template v-if="player1Wins">
+        <div class="text-4xl text-slate-400">You won! :)</div>
+        <button @click="nextLevel">next level</button>
+      </template>
+      <template v-if="player2Wins">
+        <div class="text-4xl text-slate-400">You lost! :(</div>
+        <button @click="reload">try again</button>
+      </template>
+      <template v-if="!player1Wins && !player2Wins">
+        <div class="text-4xl text-slate-400">Draw! :|</div>
+        <button @click="reload">try again</button>
+      </template>
+    </div>
+
+    <div v-if="!gameEnded" class="flex space-x-2 w-80 p-1 mt-3">
       <button class="grow" @click="toggleIsPlaying()">
         <template v-if="isPlaying">pause</template>
         <template v-else>play</template>
@@ -67,6 +128,7 @@ const reload = () => {
       </button>
       <button @click="reload">new game</button>
     </div>
+
     <div class="text-center font-bold ml-auto mt-5">
       <div class="text-xs text-slate-600">Turn</div>
       <div class="text-4xl text-slate-400">{{ turnCount }}</div>

@@ -1,6 +1,8 @@
 import { computed, ref } from 'vue';
 import { AbstractUnit, Base, Tank, Soldier, Sniper } from '@/game/objects';
 
+const level = ref(Number(localStorage.getItem('level') || '1'));
+
 const player1Units = ref<AbstractUnit[]>([
   new Base(),
   new Tank(),
@@ -29,8 +31,8 @@ const player2Units = ref<AbstractUnit[]>([
   new Sniper(),
 ])
 
-function randomizePositions(units: AbstractUnit[]) {
-  units.forEach((unit) => {
+function randomizePlayer2Positions() {
+  player2Units.value.forEach((unit) => {
     let isPositionTaken = false
     let randomPosition = { x: 0, y: 0 }
     do {
@@ -38,23 +40,28 @@ function randomizePositions(units: AbstractUnit[]) {
         x: Math.floor(Math.random() * 5) + 1,
         y: Math.floor(Math.random() * 5) + 6,
       }
-      isPositionTaken = !!units.find((unit) => unit.x === randomPosition.x && unit.y === randomPosition.y);
+      isPositionTaken = !!player2Units.value.find((unit) => unit.x === randomPosition.x && unit.y === randomPosition.y);
     } while (isPositionTaken)
     unit.x = randomPosition.x
     unit.y = randomPosition.y
   })
 }
 
-randomizePositions(player2Units.value)
+randomizePlayer2Positions()
 
-const player1HasBase = computed(() => player1Units.value.find((unit) => unit.health > 0 && unit.tags.includes('base')));
-const player2HasBase = computed(() => player2Units.value.find((unit) => unit.health > 0 && unit.tags.includes('base')));
+const player1Base = computed(() => player1Units.value.find((unit) => unit.tags.includes('base')) as Base);
+const player2Base = computed(() => player2Units.value.find((unit) => unit.tags.includes('base')) as Base);
+const player1BaseAlive = computed(() => player1Base.value.health > 0);
+const player2BaseAlive = computed(() => player2Base.value.health > 0);
 
 export function useState() {
   return {
     player1Units,
     player2Units,
-    player1HasBase,
-    player2HasBase,
+    player1Base,
+    player2Base,
+    player1BaseAlive,
+    player2BaseAlive,
+    level,
   }
 }
