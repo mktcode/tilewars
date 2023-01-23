@@ -4,8 +4,9 @@ import { PLAYSPEED, playTurn } from '@/game';
 import { useState } from '@/game/state';
 import { ref } from 'vue';
 import FastForwardIcon from './icons/FastForward.vue';
-import Play from './icons/Play.vue';
-import Pause from './icons/Pause.vue';
+import PlayIcon from './icons/Play.vue';
+import PauseIcon from './icons/Pause.vue';
+import NextTurnIcon from './icons/NextTurn.vue';
 
 const { player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive } = useState();
 
@@ -119,10 +120,10 @@ const nextLevel = () => {
 
     <div v-if="!gameEnded" class="flex space-x-2 w-80 p-1 mt-3">
       <button class="grow" @click="toggleIsPlaying()">
-        <template v-if="isPlaying"><Pause width="24" height="24" /></template>
-        <template v-else><Play width="24" height="24" /></template>
+        <template v-if="isPlaying"><PauseIcon width="24" height="24" /></template>
+        <template v-else><PlayIcon width="24" height="24" /></template>
       </button>
-      <button v-if="!isPlaying" @click="nextTurn">next turn</button>
+      <button v-if="!isPlaying" @click="nextTurn"><NextTurnIcon width="24" height="24" /></button>
       <button v-if="isPlaying" @click="toggleSpeed()">
         <FastForwardIcon width="24" height="24" />
       </button>
