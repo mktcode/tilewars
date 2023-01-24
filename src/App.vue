@@ -86,23 +86,21 @@ const resetPlayer1Units = () => {
 </script>
 
 <template>
-  <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-10">
-    <h1 class="text-3xl font-bold text-slate-400 mb-4">Level {{ level }}</h1>
+  <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-5">
+    <h1 class="text-xl font-bold text-slate-400 mb-3">Level {{ level }}</h1>
     <Game v-if="isGameStarted" />
     <template v-else>
-      <div class="flex flex-col items-center">
-        <div v-for="y in [10, 9, 8, 7, 6]" class="flex">
-          <div v-for="x in [1, 2, 3, 4, 5]">
-            <Tile
-            v-if="twoRandomPlayer2Units.some((unit) => unit.x === x && unit.y === y)"
-            class="my-[1px] mx-1"
-            :x="x"
-            :y="y"
-            @click="cycleUnit(x, y)"
-            />
-            <div v-else class="flex rounded-xl w-14 h-14 mx-1 my-[1px] opacity-40 justify-center items-center font-extrabold text-slate-400 text-2xl">
-              ?
-            </div>
+      <div v-for="y in [10, 9, 8, 7, 6]" class="flex">
+        <div v-for="x in [1, 2, 3, 4, 5]">
+          <Tile
+          v-if="twoRandomPlayer2Units.some((unit) => unit.x === x && unit.y === y)"
+          class="my-[1px] mx-1"
+          :x="x"
+          :y="y"
+          @click="cycleUnit(x, y)"
+          />
+          <div v-else class="flex justify-center items-center text-slate-400 text-opacity-20 text-2xl font-bold w-14 h-12 border-b-4 border-b-transparent mt-0.5 my-[1px] mx-1">
+            ?
           </div>
         </div>
       </div>
@@ -111,27 +109,29 @@ const resetPlayer1Units = () => {
           <Tile class="my-[1px] mx-1" :x="x" :y="y" @click="cycleUnit(x, y)" />
         </div>
       </div>
-      <div class="flex border-4 border-slate-400 rounded-xl p-2 mt-5 space-x-2">
-        <div :class="`${availableBasesCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-900 to-orange-800 rounded-xl flex flex-col items-center justify-center p-2 font-bold text-sm text-white`">
-          <span>&times;{{ availableBasesCount }}</span>
-          <span>Base</span>
-        </div>
-        <div :class="`${availableTanksCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-700 to-orange-600 rounded-xl flex flex-col items-center justify-center p-2 font-bold text-sm text-white`">
-          <span>&times;{{ availableTanksCount }}</span>
-          <span>Tank</span>
-        </div>
-        <div :class="`${availableSoldiersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-500 to-orange-400 rounded-xl flex flex-col items-center justify-center p-2 font-bold text-sm text-white`">
-          <span>&times;{{ availableSoldiersCount}}</span>
-          <span>Soldier</span>
-        </div>
-        <div :class="`${availableSnipersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-300 to-orange-200 rounded-xl flex flex-col items-center justify-center p-2 font-bold text-sm text-white`">
-          <span>&times;{{ availableSnipersCount }}</span>
-          <span>Sniper</span>
+      <div class="rounded-xl border-b-2 shadow-md">
+        <div class="flex rounded-xl mt-5 overflow-hidden border-2 border-white">
+          <div :class="`${availableBasesCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-900 to-orange-800 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availableBasesCount }}</span>
+            <span>Base</span>
+          </div>
+          <div :class="`${availableTanksCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-700 to-orange-600 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availableTanksCount }}</span>
+            <span>Tank</span>
+          </div>
+          <div :class="`${availableSoldiersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-500 to-orange-400 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availableSoldiersCount}}</span>
+            <span>Soldier</span>
+          </div>
+          <div :class="`${availableSnipersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-300 to-orange-200 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availableSnipersCount }}</span>
+            <span>Sniper</span>
+          </div>
         </div>
       </div>
-      <div class="flex space-x-3 text-center mt-5">
-        <button @click="start" :disabled="!canStart">Start game</button>
-        <button @click="resetPlayer1Units">Reset units</button>
+      <div class="flex space-x-3 text-center mt-3">
+        <button @click="start" :disabled="!canStart">Start</button>
+        <button @click="resetPlayer1Units" :disabled="player1Units.every(u => u.x === 0 && u.y === 0)">Reset</button>
       </div>
     </template>
   </main>

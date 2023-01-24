@@ -8,7 +8,7 @@ import PlayIcon from './icons/Play.vue';
 import PauseIcon from './icons/Pause.vue';
 import NextTurnIcon from './icons/NextTurn.vue';
 
-const { player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive } = useState();
+const { player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive, focussedTarget } = useState();
 
 const turnCount = ref(0);
 const isPlaying = ref(false);
@@ -56,6 +56,8 @@ const nextTurn = async() => {
     isPlaying.value = false;
     gameEnded.value = true;
   }
+
+  if (gameEnded.value) focussedTarget.value = null;
   
   if (isPlaying.value && !gameEnded.value) {
     await new Promise((resolve) => setTimeout(resolve, playSpeed.value));
@@ -120,17 +122,17 @@ const nextLevel = () => {
 
     <div v-if="!gameEnded" class="flex space-x-2 w-80 p-1 mt-3">
       <button class="grow" @click="toggleIsPlaying()">
-        <template v-if="isPlaying"><PauseIcon width="24" height="24" /></template>
-        <template v-else><PlayIcon width="24" height="24" /></template>
+        <template v-if="isPlaying"><PauseIcon width="20" height="20" /></template>
+        <template v-else><PlayIcon width="20" height="20" /></template>
       </button>
-      <button v-if="!isPlaying" @click="nextTurn"><NextTurnIcon width="24" height="24" /></button>
+      <button v-if="!isPlaying" @click="nextTurn"><NextTurnIcon width="20" height="20" /></button>
       <button v-if="isPlaying" @click="toggleSpeed()">
-        <FastForwardIcon width="24" height="24" />
+        <FastForwardIcon width="20" height="20" />
       </button>
       <button @click="reload">new game</button>
     </div>
 
-    <div class="text-center font-bold ml-auto mt-5">
+    <div class="text-center font-bold ml-auto mt-3">
       <div class="text-xs text-slate-600">Turn</div>
       <div class="text-4xl text-slate-400">{{ turnCount }}</div>
     </div>
