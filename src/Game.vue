@@ -97,12 +97,12 @@ const nextLevel = () => {
 
 <template>
   <div>
-    <div class="flex flex-col items-center">
-      <div v-for="y in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]" class="flex">
-        <div v-for="x in [1, 2, 3, 4, 5]">
-          <Tile class="my-[1px] mx-1" :x="x" :y="y" />
-        </div>
-      </div>
+    <div class="grid grid-cols-5 gap-2">
+      <template v-for="y in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]">
+        <template v-for="x in [1, 2, 3, 4, 5]">
+          <Tile :x="x" :y="y" />
+        </template>
+      </template>
     </div>
 
     <div v-if="gameEnded" class="flex flex-col items-center space-y-3 mt-5">

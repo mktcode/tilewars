@@ -3,37 +3,9 @@ import { computed, ref } from 'vue';
 import { useState } from './game/state';
 import Game from './Game.vue';
 import Tile from './Tile.vue';
+import type { AbstractUnit } from './game/objects';
 
 const { player1Units, player2Units, level } = useState();
-
-const getRandomNumberBetween = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-const twoRandomPlayer2Units = computed(() => {
-  if (player2Units.value.length < 2) return player2Units.value;
-  
-  let randomIndex1;
-  let randomIndex2;
-
-  do {
-    randomIndex1 = getRandomNumberBetween(0, player2Units.value.length - 1);
-    randomIndex2 = getRandomNumberBetween(0, player2Units.value.length - 1);
-  } while (randomIndex1 === randomIndex2);
-
-  return [player2Units.value[randomIndex1], player2Units.value[randomIndex2]];
-});
-
-
-
-const lastUnitPlacement = localStorage.getItem('lastUnitPlacement');
-if (lastUnitPlacement) {
-  try {
-    player1Units.value = JSON.parse(lastUnitPlacement);
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 const canStart = computed(() => {
   return (
@@ -43,38 +15,47 @@ const canStart = computed(() => {
 });
 
 const isGameStarted = ref(false);
-const availableUnits = computed(() => player1Units.value.filter((unit) => unit.x === 0 || unit.y === 0));
-const availableBasesCount = computed(() => availableUnits.value.filter((unit) => unit.tags.includes('base')).length);
-const availableTanksCount = computed(() => availableUnits.value.filter((unit) => unit.tags.includes('tank')).length);
-const availableSoldiersCount = computed(() => availableUnits.value.filter((unit) => unit.tags.includes('soldier')).length);
-const availableSnipersCount = computed(() => availableUnits.value.filter((unit) => unit.tags.includes('sniper')).length);
+const availablePlayer1Units = computed(() => player1Units.value.filter((unit) => unit.x === 0 || unit.y === 0));
+const availablePlayer2Units = computed(() => player2Units.value.filter((unit) => unit.x === 0 || unit.y === 0));
+const availablePlayer1BasesCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('base')).length);
+const availablePlayer1TanksCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('tank')).length);
+const availablePlayer1SoldiersCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('soldier')).length);
+const availablePlayer1SnipersCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('sniper')).length);
 
-const cycleUnit = (x: number, y: number) => {
-  const currentUnit = player1Units.value.find((unit) => unit.x === x && unit.y === y);
-  const nextUnit = availableUnits.value[0];
+const placeNextUnitForPlayer1 = (x: number, y: number) => {
+  placeNextUnit(x, y, player1Units.value, availablePlayer1Units.value);
+  randomlyPlaceNextUnitForPlayer2();
+};
 
-  if (currentUnit) {
-    const x = currentUnit.x;
-    const y = currentUnit.y;
-    
-    currentUnit.x = 0;
-    currentUnit.y = 0;
-    
-    if (nextUnit) {
-      nextUnit.x = x;
-      nextUnit.y = y;
+const randomlyPlaceNextUnitForPlayer2 = () => {
+  let isPositionTaken = false
+  let randomPosition = { x: 0, y: 0 }
+  do {
+    randomPosition = {
+      x: Math.floor(Math.random() * 5) + 1,
+      y: Math.floor(Math.random() * 5) + 6,
     }
-  } else {
-    if (nextUnit) {
-      nextUnit.x = x;
-      nextUnit.y = y;
-    }
+    isPositionTaken = !!player2Units.value.find((unit) => unit.x === randomPosition.x && unit.y === randomPosition.y);
+  } while (isPositionTaken)
+  setTimeout(() => {
+    placeNextUnit(randomPosition.x, randomPosition.y, player2Units.value, availablePlayer2Units.value);
+  }, 200);
+};
+
+const placeNextUnit = (x: number, y: number, units: AbstractUnit[], availableUnits: AbstractUnit[]) => {
+  const currentUnit = units.find((unit) => unit.x === x && unit.y === y);
+  if (currentUnit) return;
+
+  const nextUnit = availableUnits[0];
+
+  if (nextUnit) {
+    nextUnit.x = x;
+    nextUnit.y = y;
   }
 };
 
 const start = () => {
   isGameStarted.value = true;
-  localStorage.setItem('lastUnitPlacement', JSON.stringify(player1Units.value));
 };
 
 const resetPlayer1Units = () => {
@@ -90,41 +71,34 @@ const resetPlayer1Units = () => {
     <h1 class="text-xl font-bold text-slate-400 mb-3">Level {{ level }}</h1>
     <Game v-if="isGameStarted" />
     <template v-else>
-      <div v-for="y in [10, 9, 8, 7, 6]" class="flex">
-        <div v-for="x in [1, 2, 3, 4, 5]">
-          <Tile
-          v-if="twoRandomPlayer2Units.some((unit) => unit.x === x && unit.y === y)"
-          class="my-[1px] mx-1"
-          :x="x"
-          :y="y"
-          @click="cycleUnit(x, y)"
-          />
-          <div v-else class="flex justify-center items-center text-slate-400 text-opacity-20 text-2xl font-bold w-14 h-12 border-b-4 border-b-transparent mt-0.5 my-[1px] mx-1">
-            ?
-          </div>
-        </div>
-      </div>
-      <div v-for="y in [5, 4, 3, 2, 1]" class="flex">
-        <div v-for="x in [1, 2, 3, 4, 5]">
-          <Tile class="my-[1px] mx-1" :x="x" :y="y" @click="cycleUnit(x, y)" />
-        </div>
+      <div class="grid grid-cols-5 gap-2">
+        <template v-for="y in [10, 9, 8, 7, 6]">
+          <template v-for="x in [1, 2, 3, 4, 5]">
+            <Tile :x="x" :y="y" />
+          </template>
+        </template>
+        <template v-for="y in [5, 4, 3, 2, 1]">
+          <template v-for="x in [1, 2, 3, 4, 5]">
+            <Tile :x="x" :y="y" @click="placeNextUnitForPlayer1(x, y)" />
+          </template>
+        </template>
       </div>
       <div class="rounded-xl border-b-2 shadow-md">
         <div class="flex rounded-xl mt-5 overflow-hidden border-2 border-white">
-          <div :class="`${availableBasesCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-900 to-orange-800 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availableBasesCount }}</span>
+          <div :class="`${availablePlayer1BasesCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-900 to-orange-800 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availablePlayer1BasesCount }}</span>
             <span>Base</span>
           </div>
-          <div :class="`${availableTanksCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-700 to-orange-600 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availableTanksCount }}</span>
+          <div :class="`${availablePlayer1TanksCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-700 to-orange-600 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availablePlayer1TanksCount }}</span>
             <span>Tank</span>
           </div>
-          <div :class="`${availableSoldiersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-500 to-orange-400 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availableSoldiersCount}}</span>
+          <div :class="`${availablePlayer1SoldiersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-500 to-orange-400 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availablePlayer1SoldiersCount}}</span>
             <span>Soldier</span>
           </div>
-          <div :class="`${availableSnipersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-300 to-orange-200 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availableSnipersCount }}</span>
+          <div :class="`${availablePlayer1SnipersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-300 to-orange-200 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availablePlayer1SnipersCount }}</span>
             <span>Sniper</span>
           </div>
         </div>

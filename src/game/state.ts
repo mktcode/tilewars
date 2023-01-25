@@ -31,24 +31,6 @@ const player2Units = ref<AbstractUnit[]>([
   new Sniper(),
 ])
 
-function randomizePlayer2Positions() {
-  player2Units.value.forEach((unit) => {
-    let isPositionTaken = false
-    let randomPosition = { x: 0, y: 0 }
-    do {
-      randomPosition = {
-        x: Math.floor(Math.random() * 5) + 1,
-        y: Math.floor(Math.random() * 5) + 6,
-      }
-      isPositionTaken = !!player2Units.value.find((unit) => unit.x === randomPosition.x && unit.y === randomPosition.y);
-    } while (isPositionTaken)
-    unit.x = randomPosition.x
-    unit.y = randomPosition.y
-  })
-}
-
-randomizePlayer2Positions()
-
 const player1Base = computed(() => player1Units.value.find((unit) => unit.tags.includes('base')) as Base);
 const player2Base = computed(() => player2Units.value.find((unit) => unit.tags.includes('base')) as Base);
 const player1BaseAlive = computed(() => player1Base.value.health > 0);
