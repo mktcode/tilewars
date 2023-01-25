@@ -58,8 +58,12 @@ const start = () => {
   isGameStarted.value = true;
 };
 
-const resetPlayer1Units = () => {
+const resetUnits = () => {
   player1Units.value.forEach((unit) => {
+    unit.x = 0;
+    unit.y = 0;
+  });
+  player2Units.value.forEach((unit) => {
     unit.x = 0;
     unit.y = 0;
   });
@@ -105,7 +109,7 @@ const resetPlayer1Units = () => {
       </div>
       <div class="flex space-x-3 text-center mt-3">
         <button @click="start" :disabled="!canStart">Start</button>
-        <button @click="resetPlayer1Units" :disabled="player1Units.every(u => u.x === 0 && u.y === 0)">Reset</button>
+        <button @click="resetUnits" :disabled="player1Units.every(u => u.x === 0 && u.y === 0)">Reset</button>
       </div>
     </template>
   </main>
