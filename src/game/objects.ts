@@ -38,14 +38,14 @@ export class Soldier extends AbstractUnit {
   tags = ['soldier']
 }
 
-export class Sniper extends AbstractUnit {
+export class Fighter extends AbstractUnit {
   health = 400
   maxHealth = 400
   damage = 25
   firerate = 2
   range = 4
   speed = 1
-  tags = ['sniper']
+  tags = ['fighter']
 }
 
 export class Base extends AbstractUnit {

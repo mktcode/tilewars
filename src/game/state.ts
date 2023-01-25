@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue';
-import { AbstractUnit, Base, Tank, Soldier, Sniper } from '@/game/objects';
+import { AbstractUnit, Base, Tank, Soldier, Fighter } from '@/game/objects';
 
 const level = ref(Number(localStorage.getItem('level') || '1'));
 
@@ -13,8 +13,8 @@ const player1Units = ref<AbstractUnit[]>([
   new Soldier(),
   new Soldier(),
   new Soldier(),
-  new Sniper(),
-  new Sniper(),
+  new Fighter(),
+  new Fighter(),
 ])
 
 const player2Units = ref<AbstractUnit[]>([
@@ -27,8 +27,8 @@ const player2Units = ref<AbstractUnit[]>([
   new Soldier(),
   new Soldier(),
   new Soldier(),
-  new Sniper(),
-  new Sniper(),
+  new Fighter(),
+  new Fighter(),
 ])
 
 const player1Base = computed(() => player1Units.value.find((unit) => unit.tags.includes('base')) as Base);

@@ -20,7 +20,7 @@ const availablePlayer2Units = computed(() => player2Units.value.filter((unit) =>
 const availablePlayer1BasesCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('base')).length);
 const availablePlayer1TanksCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('tank')).length);
 const availablePlayer1SoldiersCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('soldier')).length);
-const availablePlayer1SnipersCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('sniper')).length);
+const availablePlayer1FighterCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('fighter')).length);
 
 const placeNextUnitForPlayer1 = (x: number, y: number) => {
   placeNextUnit(x, y, player1Units.value, availablePlayer1Units.value);
@@ -101,9 +101,9 @@ const resetUnits = () => {
             <span>&times;{{ availablePlayer1SoldiersCount}}</span>
             <span>Soldier</span>
           </div>
-          <div :class="`${availablePlayer1SnipersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-300 to-orange-200 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availablePlayer1SnipersCount }}</span>
-            <span>Sniper</span>
+          <div :class="`${availablePlayer1FighterCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-300 to-orange-200 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
+            <span>&times;{{ availablePlayer1FighterCount }}</span>
+            <span>Fighter</span>
           </div>
         </div>
       </div>
