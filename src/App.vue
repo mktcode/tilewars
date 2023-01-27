@@ -75,7 +75,7 @@ const start = () => {
   <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-5">
     <Game v-if="isGameStarted" />
     <template v-else>
-      <div class="grid grid-cols-5 gap-1">
+      <div class="grid grid-cols-5 gap-1 bg-blend-soft-light bg-slate-300" style="background-image: url('/crazygames-logo.png'); background-size: 85%; background-repeat: no-repeat; background-position: center 90px;">
         <template v-for="y in [10, 9, 8, 7, 6]">
           <template v-for="x in [1, 2, 3, 4, 5]">
             <Tile :x="x" :y="y" :class="`pointer-events-none ${player2Units.find(u => u.x === x && u.y ===y) ? '' : 'opacity-50'}`" />

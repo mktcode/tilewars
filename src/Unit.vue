@@ -19,7 +19,7 @@ function toggleFocus() {
 </script>
 
 <template>
-  <div class="flex rounded-xl overflow-hidden text-white text-xs w-14 h-12 border-b-4 shadow-md shadow-gray-600 hover:shadow-lg hover:shadow-gray-400 transition-all">
+  <div class="flex rounded-xl overflow-hidden text-white text-xs w-14 h-11 border-b-4 shadow-md shadow-gray-600 hover:shadow-lg hover:shadow-gray-400 transition-all">
     <div
       :class="`grow flex flex-col items-center justify-center rounded-xl border-4 border-white text-white text-opacity-70 font-bold bg-gradient-to-t cursor-pointer`"
       @click="toggleFocus"
