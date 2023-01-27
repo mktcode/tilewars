@@ -31,6 +31,8 @@ const player2Units = ref<AbstractUnit[]>([
   new Fighter(),
 ])
 
+const allUnits = computed(() => [...player1Units.value, ...player2Units.value]);
+
 const player1Base = computed(() => player1Units.value.find((unit) => unit.tags.includes('base')) as Base);
 const player2Base = computed(() => player2Units.value.find((unit) => unit.tags.includes('base')) as Base);
 const player1BaseAlive = computed(() => player1Base.value.health > 0);
@@ -41,6 +43,7 @@ const focussedTarget = ref<AbstractUnit | null>(null);
 export function useState() {
   return {
     level,
+    allUnits,
     player1Units,
     player2Units,
     player1Base,

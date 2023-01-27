@@ -8,7 +8,7 @@ import PlayIcon from './icons/Play.vue';
 import PauseIcon from './icons/Pause.vue';
 import NextTurnIcon from './icons/NextTurn.vue';
 
-const { player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive, focussedTarget } = useState();
+const { allUnits, player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive, focussedTarget } = useState();
 
 const turnCount = ref(0);
 const isPlaying = ref(false);
@@ -100,7 +100,7 @@ const nextLevel = () => {
     <div class="grid grid-cols-5 gap-2">
       <template v-for="y in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]">
         <template v-for="x in [1, 2, 3, 4, 5]">
-          <Tile :x="x" :y="y" />
+          <Tile :x="x" :y="y" :class="`${allUnits.find(u => u.x === x && u.y === y) ? '' : 'pointer-events-none'}`" />
         </template>
       </template>
     </div>
