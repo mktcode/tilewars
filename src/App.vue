@@ -77,7 +77,7 @@ const resetUnits = () => {
     <h1 class="text-xl font-bold text-slate-400 mb-3">Level {{ level }}</h1>
     <Game v-if="isGameStarted" />
     <template v-else>
-      <div class="grid grid-cols-5 gap-2">
+      <div class="grid grid-cols-5 gap-1">
         <template v-for="y in [10, 9, 8, 7, 6]">
           <template v-for="x in [1, 2, 3, 4, 5]">
             <Tile :x="x" :y="y" :class="`pointer-events-none ${player2Units.find(u => u.x === x && u.y ===y) ? '' : 'opacity-50'}`" />

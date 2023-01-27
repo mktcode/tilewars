@@ -103,7 +103,7 @@ const nextLevel = () => {
 
 <template>
   <div>
-    <div class="grid grid-cols-5 gap-2">
+    <div class="grid grid-cols-5 gap-1">
       <template v-for="y in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]">
         <template v-for="x in [1, 2, 3, 4, 5]">
           <Tile :x="x" :y="y" :class="`${allUnits.find(u => u.x === x && u.y === y) ? '' : 'pointer-events-none'}`" />
@@ -126,7 +126,7 @@ const nextLevel = () => {
       </template>
     </div>
 
-    <div v-if="!gameEnded" class="flex space-x-2 w-80 p-1 mt-3">
+    <div v-if="!gameEnded" class="flex space-x-2 p-1 mt-3">
       <button class="grow" @click="toggleIsPlaying()">
         <template v-if="isPlaying"><PauseIcon width="20" height="20" /></template>
         <template v-else><PlayIcon width="20" height="20" /></template>
