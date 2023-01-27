@@ -23,6 +23,8 @@ const availablePlayer1SoldiersCount = computed(() => availablePlayer1Units.value
 const availablePlayer1FighterCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('fighter')).length);
 
 const placeNextUnitForPlayer1 = (x: number, y: number) => {
+  if (player1Units.value.find((unit) => unit.x === x && unit.y === y)) return;
+  
   placeNextUnit(x, y, player1Units.value, availablePlayer1Units.value);
   randomlyPlaceNextUnitForPlayer2();
 };
