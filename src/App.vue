@@ -78,7 +78,7 @@ const resetUnits = () => {
       <div class="grid grid-cols-5 gap-2">
         <template v-for="y in [10, 9, 8, 7, 6]">
           <template v-for="x in [1, 2, 3, 4, 5]">
-            <Tile :x="x" :y="y" />
+            <Tile :x="x" :y="y" :class="`pointer-events-none ${player2Units.find(u => u.x === x && u.y ===y) ? '' : 'opacity-50'}`" />
           </template>
         </template>
         <template v-for="y in [5, 4, 3, 2, 1]">
