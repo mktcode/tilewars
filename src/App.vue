@@ -4,6 +4,9 @@ import { useState } from './game/state';
 import Game from './Game.vue';
 import Tile from './Tile.vue';
 import type { AbstractUnit } from './game/objects';
+import HeartIcon from './icons/Heart.vue';
+import CrosshairsIcon from './icons/Crosshairs.vue';
+import PlayIcon from './icons/Play.vue';
 
 const { player1Units, player2Units, level } = useState();
 
@@ -22,9 +25,16 @@ const availablePlayer1TanksCount = computed(() => availablePlayer1Units.value.fi
 const availablePlayer1SoldiersCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('soldier')).length);
 const availablePlayer1FighterCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('fighter')).length);
 
+const availablePlayer1UnitsDisplayColor = computed(() => {
+  if (availablePlayer1BasesCount.value > 0) return 'from-orange-900 to-orange-800';
+  if (availablePlayer1TanksCount.value > 0) return 'from-orange-700 to-orange-600';
+  if (availablePlayer1SoldiersCount.value > 0) return 'from-orange-500 to-orange-400';
+  return 'from-orange-300 to-orange-200';
+});
+
 const placeNextUnitForPlayer1 = (x: number, y: number) => {
   if (player1Units.value.find((unit) => unit.x === x && unit.y === y)) return;
-  
+
   placeNextUnit(x, y, player1Units.value, availablePlayer1Units.value);
   randomlyPlaceNextUnitForPlayer2();
 };
@@ -59,22 +69,10 @@ const placeNextUnit = (x: number, y: number, units: AbstractUnit[], availableUni
 const start = () => {
   isGameStarted.value = true;
 };
-
-const resetUnits = () => {
-  player1Units.value.forEach((unit) => {
-    unit.x = 0;
-    unit.y = 0;
-  });
-  player2Units.value.forEach((unit) => {
-    unit.x = 0;
-    unit.y = 0;
-  });
-};
 </script>
 
 <template>
   <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-5">
-    <h1 class="text-xl font-bold text-slate-400 mb-3">Level {{ level }}</h1>
     <Game v-if="isGameStarted" />
     <template v-else>
       <div class="grid grid-cols-5 gap-1">
@@ -89,29 +87,56 @@ const resetUnits = () => {
           </template>
         </template>
       </div>
-      <div class="rounded-xl border-b-2 shadow-md">
-        <div class="flex rounded-xl mt-5 overflow-hidden border-2 border-white">
-          <div :class="`${availablePlayer1BasesCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-900 to-orange-800 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availablePlayer1BasesCount }}</span>
-            <span>Base</span>
-          </div>
-          <div :class="`${availablePlayer1TanksCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-700 to-orange-600 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availablePlayer1TanksCount }}</span>
-            <span>Tank</span>
-          </div>
-          <div :class="`${availablePlayer1SoldiersCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-500 to-orange-400 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availablePlayer1SoldiersCount}}</span>
-            <span>Soldier</span>
-          </div>
-          <div :class="`${availablePlayer1FighterCount ? '' : 'opacity-30'} bg-gradient-to-t from-orange-300 to-orange-200 flex flex-col items-center justify-center p-2 font-bold text-sm text-white leading-4`">
-            <span>&times;{{ availablePlayer1FighterCount }}</span>
-            <span>Fighter</span>
+      <div class="flex items-center justify-center mt-3">
+        <div class="flex flex-col items-center justify-center px-5">
+          <div class="text-xs font-bold text-slate-400">Level</div>
+          <div class="text-slate-600 text-xl font-bold">{{ level }}</div>
+        </div>
+        <div v-if="availablePlayer1Units.length" class="rounded-xl border-b-2 shadow-md w-56">
+          <div :class="`flex flex-col rounded-xl border-4 border-white bg-gradient-to-t text-white text-opacity-75 text-sm px-2 py-1 ${availablePlayer1UnitsDisplayColor}`">
+            <div class="flex justify-between">
+              <div class="mr-auto text-base font-bold">
+                <span class="capitalize">{{ availablePlayer1Units[0].tags[0] }}</span>
+                &times;{{
+                  availablePlayer1Units[0].tags.includes('base')
+                    ? 1
+                    : availablePlayer1Units[0].tags.includes('tank')
+                      ? availablePlayer1TanksCount
+                      : availablePlayer1Units[0].tags.includes('soldier')
+                        ? availablePlayer1SoldiersCount
+                        : availablePlayer1FighterCount
+                }}
+              </div>
+              <div class="mr-2">
+                <HeartIcon class="inline-block w-4 h-4" />  
+                {{ availablePlayer1Units[0].health }}
+              </div>
+              <div>
+                <CrosshairsIcon class="inline-block w-4 h-4" />
+                {{ availablePlayer1Units[0].damage }}
+              </div>
+            </div>
+            <div class="flex justify-between space-x-2">
+              <div>
+                Firerate:
+                {{ availablePlayer1Units[0].firerate }}
+              </div>
+              <div>
+                Range:
+                {{ availablePlayer1Units[0].range }}
+              </div>
+              <div>
+                Speed:
+                {{ availablePlayer1Units[0].speed }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="flex space-x-3 text-center mt-3">
-        <button @click="start" :disabled="!canStart">Start</button>
-        <button @click="resetUnits" :disabled="player1Units.every(u => u.x === 0 && u.y === 0)">Reset</button>
+        <div v-else class="w-64">
+          <button @click="start" :disabled="!canStart" class="w-full">
+            <PlayIcon class="inline-block w-6 h-6" />
+          </button>
+        </div>
       </div>
     </template>
   </main>
