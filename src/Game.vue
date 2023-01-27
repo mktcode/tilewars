@@ -111,21 +111,6 @@ const nextLevel = () => {
       </template>
     </div>
 
-    <div v-if="gameEnded" class="flex flex-col items-center space-y-3 mt-5">
-      <template v-if="player1Wins">
-        <div class="text-4xl text-slate-400">You won! :)</div>
-        <button @click="nextLevel">next level</button>
-      </template>
-      <template v-if="player2Wins">
-        <div class="text-4xl text-slate-400">You lost! :(</div>
-        <button @click="reload">try again</button>
-      </template>
-      <template v-if="!player1Wins && !player2Wins">
-        <div class="text-4xl text-slate-400">Draw! :|</div>
-        <button @click="reload">try again</button>
-      </template>
-    </div>
-
     <div v-if="!gameEnded" class="flex space-x-2 p-1 mt-3">
       <button class="grow" @click="toggleIsPlaying()">
         <template v-if="isPlaying"><PauseIcon width="20" height="20" /></template>
@@ -141,6 +126,23 @@ const nextLevel = () => {
     <div class="text-center font-bold ml-auto mt-3">
       <div class="text-xs text-slate-600">Turn</div>
       <div class="text-4xl text-slate-400">{{ turnCount }}</div>
+    </div>
+
+    <div v-if="gameEnded" class="absolute inset-0 flex flex-col items-center justify-center">
+      <div class="rounded-xl bg-slate-100 shadow-2xl shadow-gray-800 p-5">
+        <template v-if="player1Wins">
+          <div class="text-4xl text-slate-400">You won! :)</div>
+          <button class="mt-3 w-full" @click="nextLevel">next level</button>
+        </template>
+        <template v-if="player2Wins">
+          <div class="text-4xl text-slate-400">You lost! :(</div>
+          <button class="mt-3 w-full" @click="reload">try again</button>
+        </template>
+        <template v-if="!player1Wins && !player2Wins">
+          <div class="text-4xl text-slate-400">Draw! :|</div>
+          <button class="mt-3 w-full" @click="reload">try again</button>
+        </template>
+      </div>
     </div>
   </div>
 </template>
