@@ -11,13 +11,18 @@ import NextTurnIcon from './icons/NextTurn.vue';
 const { allUnits, player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive, focussedTarget } = useState();
 
 const turnCount = ref(0);
-const isPlaying = ref(false);
+const isPlaying = ref(true);
 const playSpeed = ref(PLAYSPEED.Slow)
 const player1Wins = ref(false);
 const player2Wins = ref(false);
 const gameEnded = ref(false);
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const nextTurn = async() => {
+  if (turnCount.value === 0) {
+    await wait(1000);
+  }
   turnCount.value += 1;
   playTurn(turnCount.value, player1Units.value, player2Units.value);
 
@@ -60,10 +65,11 @@ const nextTurn = async() => {
   if (gameEnded.value) focussedTarget.value = null;
   
   if (isPlaying.value && !gameEnded.value) {
-    await new Promise((resolve) => setTimeout(resolve, playSpeed.value));
+    await wait(playSpeed.value);
     nextTurn();
   }
 };
+nextTurn();
 
 const toggleSpeed = () => {
   if (playSpeed.value === PLAYSPEED.Slow) {
