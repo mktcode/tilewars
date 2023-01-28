@@ -8,12 +8,13 @@ import PlayIcon from './icons/Play.vue';
 import PauseIcon from './icons/Pause.vue';
 import NextTurnIcon from './icons/NextTurn.vue';
 import { Base, Fighter, Soldier, Tank } from './game/objects';
+import { mutateWeights } from './game/ai-model';
 
 const emit = defineEmits<{
   (event: 'game-ended'): void;
 }>();
 
-const { allUnits, player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive, focussedTarget } = useState();
+const { aiModel, aiIsThinking, allUnits, player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive, focussedTarget } = useState();
 
 const turnCount = ref(0);
 const isPlaying = ref(true);
@@ -89,7 +90,13 @@ const nextTurn = async() => {
     gameEnded.value = true;
   }
 
-  if (gameEnded.value) focussedTarget.value = null;
+  if (gameEnded.value) {
+    if (player1Wins.value) {
+      // adjust 90% of network weights slightly
+      aiModel.setWeights(mutateWeights(aiModel.getWeights(), 0.005, 0.9));
+    }
+    focussedTarget.value = null;
+  }
   
   if (isPlaying.value && !gameEnded.value) {
     await wait(playSpeed.value);

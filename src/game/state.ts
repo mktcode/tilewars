@@ -1,5 +1,9 @@
 import { computed, ref } from 'vue';
 import { AbstractUnit, Base, Tank, Soldier, Fighter } from '@/game/objects';
+import { getEmptyAiModel } from './ai-model';
+
+const aiModel = getEmptyAiModel();
+const aiIsThinking = ref(false);
 
 const level = ref(Number(localStorage.getItem('level') || '1'));
 
@@ -50,6 +54,8 @@ function unitIsNotPositioned(unit: AbstractUnit) {
 
 export function useState() {
   return {
+    aiModel,
+    aiIsThinking,
     level,
     allUnits,
     player1Units,

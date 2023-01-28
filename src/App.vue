@@ -7,12 +7,9 @@ import type { AbstractUnit } from './game/objects';
 import HeartIcon from './icons/Heart.vue';
 import CrosshairsIcon from './icons/Crosshairs.vue';
 import PlayIcon from './icons/Play.vue';
-import { predictTurn, getEmptyAiModel, mutateWeights } from './game/ai-model';
+import { predictTurn, mutateWeights } from './game/ai-model';
 
-const aiModel = getEmptyAiModel();
-const aiIsThinking = ref(false);
-
-const { allUnits, player1Units, player2Units, level, unitIsPositioned, unitIsNotPositioned } = useState();
+const { aiModel, aiIsThinking, allUnits, player1Units, player2Units, level, unitIsPositioned, unitIsNotPositioned } = useState();
 
 const canStart = computed(() => {
   return (
@@ -76,8 +73,8 @@ const prepareTilesInput = () => {
 const mutateAiUntilEmptyTileFound = async (): Promise<{x: number, y: number }> => {
   const tilesInput = prepareTilesInput();
 
-  let isPositionTaken = false
-  let nextPosition = { x: 0, y: 0 }
+  let isPositionTaken = false;
+  let nextPosition = { x: 0, y: 0 };
 
   do {
     await new Promise(resolve => setTimeout(resolve, 0)); // UI-blocking workaround
