@@ -26,18 +26,31 @@ const nextTurn = async() => {
   turnCount.value += 1;
   playTurn(turnCount.value, player1Units.value, player2Units.value);
 
-  // move to state.ts
+  // move to state.ts?
   const player1UnitsHealthSum = player1Units.value.reduce((sum, unit) => sum + unit.health, 0);
   const player2UnitsHealthSum = player2Units.value.reduce((sum, unit) => sum + unit.health, 0);
 
-  const player1UnitsInXRangeOfPlayer2Base = player1Units.value.filter((unit) => unit.range >= Math.abs(unit.x - player2Base.value.x));
-  const player2UnitsInXRangeOfPlayer1Base = player2Units.value.filter((unit) => unit.range >= Math.abs(unit.x - player1Base.value.x));
+  const player1UnitsInRangeOfPlayer2Units = player1Units.value.filter((unit) => unit.health > 0 && player2Units.value.some((unit2) => unit2.health > 0 && unit.range >= Math.abs(unit.x - unit2.x) && unit.range >= Math.abs(unit.y - unit2.y)));
+  const player2UnitsInRangeOfPlayer1Units = player2Units.value.filter((unit) => unit.health > 0 && player1Units.value.some((unit2) => unit2.health > 0 && unit.range >= Math.abs(unit.x - unit2.x) && unit.range >= Math.abs(unit.y - unit2.y)));
+
+  const movingPlayer1UnitsWithFreeTilesOnTheirLane = player1Units.value.filter((unit) => {
+    const unitsOnSameLane = allUnits.value.filter((unit2) => unit2.x === unit.x && unit2.y > unit.y);
+    const baseOnSameLane = player1Base.value.x === unit.x && player1Base.value.y > unit.y;
+    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < 10 - unit.y && !baseOnSameLane;
+  });
+  const movingPlayer2UnitsWithFreeTilesOnTheirLane = player2Units.value.filter((unit) => {
+    const unitsOnSameLane = allUnits.value.filter((unit2) => unit2.x === unit.x && unit2.y < unit.y);
+    const baseOnSameLane = player2Base.value.x === unit.x && player2Base.value.y < unit.y;
+    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < unit.y - 1 && !baseOnSameLane;
+  });
   
+  // when the game was perfectly balanced
   if (player1UnitsHealthSum + player2UnitsHealthSum === 0) {
     isPlaying.value = false;
     gameEnded.value = true;
   }
   
+  // when one player won due to base destruction
   if (player1BaseAlive.value && !player2BaseAlive.value) {
     player1Wins.value = true;
     isPlaying.value = false;
@@ -50,14 +63,23 @@ const nextTurn = async() => {
     gameEnded.value = true;
   }
 
+  // when game ends due to units being stuck
   if (
-    player1Units.value.every((unit) => unit.y === 10) &&
-    player2Units.value.every((unit) => unit.y === 1) &&
-    player1UnitsInXRangeOfPlayer2Base.length === 0 &&
-    player2UnitsInXRangeOfPlayer1Base.length === 0
+    player1UnitsInRangeOfPlayer2Units.length === 0 &&
+    player2UnitsInRangeOfPlayer1Units.length === 0 &&
+    movingPlayer1UnitsWithFreeTilesOnTheirLane.length === 0 &&
+    movingPlayer2UnitsWithFreeTilesOnTheirLane.length === 0
   ) {
-    player1Wins.value = player1UnitsHealthSum > player2UnitsHealthSum;
-    player2Wins.value = player2UnitsHealthSum > player1UnitsHealthSum;
+    if (player1Base.value.health > player2Base.value.health) {
+      player1Wins.value = true;
+    } else if (player2Base.value.health > player1Base.value.health) {
+      player2Wins.value = true;
+    } else if (player1UnitsHealthSum > player2UnitsHealthSum) {
+      player1Wins.value = true;
+    } else if (player2UnitsHealthSum > player1UnitsHealthSum) {
+      player2Wins.value = true;
+    }
+
     isPlaying.value = false;
     gameEnded.value = true;
   }
@@ -130,6 +152,20 @@ const nextLevel = () => {
 
     <div v-if="gameEnded" class="absolute inset-0 flex flex-col items-center justify-center">
       <div class="rounded-xl bg-slate-100 shadow-2xl shadow-gray-800 p-5">
+        <div class="text-gray-400 text-sm mb-5">
+          <div class="flex justify-between">
+            <div>Your base's health:</div>
+            <div>{{ player1Base.health }}</div>
+          </div>
+          <div class="flex justify-between">
+            <div>Enemy base's health:</div>
+            <div>{{ player2Base.health }}</div>
+          </div>
+        </div>
+        <div v-if="player1Base.health === player2Base.health">
+          Bases have equal health. Units' health will be used to determine the winner.<br />
+          TODO: Display units' health.
+        </div>
         <template v-if="player1Wins">
           <div class="text-4xl text-slate-400">You won! :)</div>
           <button class="mt-3 w-full" @click="nextLevel">next level</button>
