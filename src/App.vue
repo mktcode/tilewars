@@ -10,6 +10,7 @@ import PlayIcon from './icons/Play.vue';
 import { predictTurn, getEmptyAiModel, mutateWeights } from './game/ai-model';
 
 const aiModel = getEmptyAiModel();
+const aiIsThinking = ref(false);
 
 const { allUnits, player1Units, player2Units, level, unitIsPositioned, unitIsNotPositioned } = useState();
 
@@ -36,6 +37,7 @@ const availablePlayer1UnitsDisplayColor = computed(() => {
 });
 
 const placeNextUnitForPlayer1 = (x: number, y: number) => {
+  if (canStart.value) return;
   if (player1Units.value.find((unit) => unit.x === x && unit.y === y)) return;
 
   placeNextUnit(x, y, player1Units.value, availablePlayer1Units.value);
@@ -71,15 +73,15 @@ const prepareTilesInput = () => {
   return tilesInput;
 };
 
-const randomlyPlaceNextUnitForPlayer2 = () => {
+const mutateAiUntilEmptyTileFound = async (): Promise<{x: number, y: number }> => {
   const tilesInput = prepareTilesInput();
 
   let isPositionTaken = false
   let nextPosition = { x: 0, y: 0 }
 
   do {
-    console.log('mutate weights')
-    aiModel.setWeights(mutateWeights(aiModel.getWeights(), 0.1, 0.1));
+    await new Promise(resolve => setTimeout(resolve, 0)); // UI-blocking workaround
+    aiModel.setWeights(mutateWeights(aiModel.getWeights(), 0.01, 0.1));
     const nextPositionValue = Math.abs(predictTurn(aiModel, tilesInput));
     const nextPositionTileIndex = Math.floor(nextPositionValue * 25); // 25 fields (upper half)
     nextPosition = {
@@ -88,11 +90,18 @@ const randomlyPlaceNextUnitForPlayer2 = () => {
     };
     isPositionTaken = !!player2Units.value.find((unit) => unit.x === nextPosition.x && unit.y === nextPosition.y);
   } while (isPositionTaken)
-  console.log(nextPosition)
 
-  setTimeout(() => {
+  return nextPosition;
+}
+
+const randomlyPlaceNextUnitForPlayer2 = async () => {
+  if (canStart.value) return;
+
+  aiIsThinking.value = true;
+  mutateAiUntilEmptyTileFound().then((nextPosition) => {
     placeNextUnit(nextPosition.x, nextPosition.y, player2Units.value, availablePlayer2Units.value);
-  }, Math.random() * 2000);
+    aiIsThinking.value = false;
+  });
 };
 
 const placeNextUnit = (x: number, y: number, units: AbstractUnit[], availableUnits: AbstractUnit[]) => {
@@ -116,6 +125,13 @@ const start = () => {
   <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-5">
     <Game v-if="isGameStarted" />
     <template v-else>
+      <Transition>
+        <div v-if="aiIsThinking" class="absolute inset-0 flex items-start justify-center z-10">
+          <div class="bg-white rounded px-3 py-1 mt-32 shadow-xl text-xs text-gray-400 animate-pulse">
+            Let me think...
+          </div>
+        </div>
+      </Transition>
       <div class="grid grid-cols-5 gap-1">
         <template v-for="y in [9, 8, 7, 6, 5]">
           <template v-for="x in [0, 1, 2, 3, 4]">
