@@ -12,6 +12,7 @@
     "deploy": "npm run build && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.2.0",
     "vue": "^3.2.45"
   },
   "devDependencies": {
