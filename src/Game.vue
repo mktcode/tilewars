@@ -42,12 +42,12 @@ const nextTurn = async() => {
   const movingPlayer1UnitsWithFreeTilesOnTheirLane = player1Units.value.filter((unit) => {
     const unitsOnSameLane = allUnits.value.filter((unit2) => unit2.x === unit.x && unit2.y! > unit.y!);
     const baseOnSameLane = player1Base.value.x === unit.x && player1Base.value.y! > unit.y!;
-    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < 10 - unit.y! && !baseOnSameLane;
+    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < 9 - unit.y! && !baseOnSameLane;
   });
   const movingPlayer2UnitsWithFreeTilesOnTheirLane = player2Units.value.filter((unit) => {
     const unitsOnSameLane = allUnits.value.filter((unit2) => unit2.x === unit.x && unit2.y! < unit.y!);
     const baseOnSameLane = player2Base.value.x === unit.x && player2Base.value.y! < unit.y!;
-    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < unit.y! - 1 && !baseOnSameLane;
+    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < unit.y! && !baseOnSameLane;
   });
   
   // when the game was perfectly balanced
