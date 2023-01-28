@@ -11,6 +11,11 @@ import { predictTurn, mutateWeights } from './game/ai-model';
 
 const { aiModel, aiIsThinking, allUnits, player1Units, player2Units, level, unitIsPositioned, unitIsNotPositioned } = useState();
 
+const showTutorial = ref(true);
+const hideTutorial = () => {
+  showTutorial.value = false;
+};
+
 const canStart = computed(() => {
   return (
     player1Units.value.every(unitIsPositioned) &&
@@ -120,6 +125,58 @@ const start = () => {
 
 <template>
   <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-5">
+    <Transition>
+      <div v-if="showTutorial" class="absolute inset-0 flex flex-col items-center justify-center z-10 bg-black bg-opacity-20">
+        <div class="bg-white rounded p-5 shadow-xl text-sm text-gray-700 max-w-sm space-y-3">
+          <div class="text-center mb-5">
+            <h1 class="text-xl">Tilewars A.I.</h1>
+            <div class="text-gray-400">
+              A strategic mini-game against an evolving AI.
+            </div>
+          </div>
+          <div>
+            <div class="font-bold">Placing units:</div>
+            <p class="text-xs">
+              You have 11 units, with different properties, to place on the lower half of the board, in a given order, turn by turn.
+            </p>
+          </div>
+          <div>
+            <div class="font-bold">Running the simulation:</div>
+            <p class="text-xs">
+              All units move to the other end of the map and attack enemy units in their way, based on their range and damage. <strong>The goal is to destroy the opponent's base.</strong>
+            </p>
+            <p class="text-xs text-gray-300 mt-2">
+              You as the player can click on an enemy unit to focus on. The AI can't do that (yet).
+            </p>
+          </div>
+          <div>
+            <div class="font-bold">Results:</div>
+            <ul class="text-xs space-y-1">
+              <li>The player who destroys the opponent's base wins.</li>
+              <li>If both bases survive (out of enemy's range), their remaining health decides.</li>
+              <li>If they are equal, all remaining units' health is compared.</li>
+              <li>If they are equal too, the game is a draw.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-bold">Mutation:</div>
+            <p class="text-xs">
+              What the AI will learn, is how to place its units, reacting to how you place yours.
+              Each time you start the game, you'll start with an untrained neural network.
+              It will mutate, when it picks an already taken tile and each time you win.
+              Training a globally shared network is one of the next development steps.
+            </p>
+            <p class="text-center text-gray-300 mt-2">
+              If you support experimental, fun development projects like this, hit the "Support This Game" button.
+            </p>
+          </div>
+
+        </div>
+        <div class="mt-5">
+          <button @click="hideTutorial">Start game</button>
+        </div>
+      </div>
+    </Transition>
     <Game v-if="isGameStarted" @game-ended="isGameStarted = false" />
     <template v-else>
       <Transition>
