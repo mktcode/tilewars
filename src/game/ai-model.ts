@@ -57,5 +57,5 @@ export function predictTurn(model: tf.Sequential, tiles: number[]) {
   const output = model.predict(input) as tf.Tensor;
   const outputValue = output.dataSync();
   
-  return outputValue;
+  return outputValue[0];
 }
