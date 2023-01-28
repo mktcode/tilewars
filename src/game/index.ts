@@ -69,7 +69,6 @@ const dealDamage = (turnCount: number, units: AbstractUnit[], enemyUnits: Abstra
     }
 
     enemyToAttack.health -= unit.damage
-    console.log(enemyToAttack, unit)
     if (enemyToAttack.health < 0) enemyToAttack.health = 0
   })
 }
