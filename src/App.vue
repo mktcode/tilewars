@@ -144,6 +144,7 @@ const start = () => {
             <div class="font-bold">Running the simulation:</div>
             <p class="text-xs">
               All units move to the other end of the map and attack enemy units in their way, based on their range and damage. <strong>The goal is to destroy the opponent's base.</strong>
+              Visual feedback is limited and not very game-like yet, but the simulation is working.
             </p>
             <p class="text-xs text-gray-300 mt-2">
               You as the player can click on an enemy unit to focus on. The AI can't do that (yet).
