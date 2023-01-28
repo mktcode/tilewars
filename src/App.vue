@@ -83,7 +83,6 @@ const mutateAiUntilEmptyTileFound = async (): Promise<{x: number, y: number }> =
     await new Promise(resolve => setTimeout(resolve, 0)); // UI-blocking workaround
     aiModel.setWeights(mutateWeights(aiModel.getWeights(), 0.02, 0.1)); // TODO: make adjustment increase with each try (clamped in a range)
     const nextPositionValue = Math.abs(predictTurn(aiModel, tilesInput));
-    console.log('nextPositionValue', nextPositionValue)
     const nextPositionTileIndex = Math.floor(nextPositionValue * 25); // 25 fields (upper half)
     nextPosition = {
       x: nextPositionTileIndex % 5,
