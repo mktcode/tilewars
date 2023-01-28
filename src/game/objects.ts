@@ -1,12 +1,7 @@
 export abstract class AbstractGameObject {
-  x: number = 0
-  y: number = 0
+  x?: number
+  y?: number
   tags: string[] = []
-
-  constructor(x: number = 0, y: number = 0) {
-    this.x = x
-    this.y = y
-  }
 }
 
 export abstract class AbstractUnit extends AbstractGameObject {

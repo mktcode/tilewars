@@ -7,19 +7,22 @@ import type { AbstractUnit } from './game/objects';
 import HeartIcon from './icons/Heart.vue';
 import CrosshairsIcon from './icons/Crosshairs.vue';
 import PlayIcon from './icons/Play.vue';
+import { predictTurn, getEmptyAiModel, mutateWeights } from './game/ai-model';
 
-const { player1Units, player2Units, level } = useState();
+const aiModel = getEmptyAiModel();
+
+const { allUnits, player1Units, player2Units, level, unitIsPositioned, unitIsNotPositioned } = useState();
 
 const canStart = computed(() => {
   return (
-    player1Units.value.every((unit) => unit.x !== 0 && unit.y !== 0) &&
-    player2Units.value.every((unit) => unit.x !== 0 && unit.y !== 0)
+    player1Units.value.every(unitIsPositioned) &&
+    player2Units.value.every(unitIsPositioned)
   );
 });
 
 const isGameStarted = ref(false);
-const availablePlayer1Units = computed(() => player1Units.value.filter((unit) => unit.x === 0 || unit.y === 0));
-const availablePlayer2Units = computed(() => player2Units.value.filter((unit) => unit.x === 0 || unit.y === 0));
+const availablePlayer1Units = computed(() => player1Units.value.filter(unitIsNotPositioned));
+const availablePlayer2Units = computed(() => player2Units.value.filter(unitIsNotPositioned));
 const availablePlayer1BasesCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('base')).length);
 const availablePlayer1TanksCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('tank')).length);
 const availablePlayer1SoldiersCount = computed(() => availablePlayer1Units.value.filter((unit) => unit.tags.includes('soldier')).length);
@@ -39,27 +42,65 @@ const placeNextUnitForPlayer1 = (x: number, y: number) => {
   randomlyPlaceNextUnitForPlayer2();
 };
 
+const prepareTilesInput = () => {
+  const tilesInput = []
+  for (let x = 0; x < 5; x++) {
+    for (let y = 0; y < 10; y++) {
+      const unit = allUnits.value.find((u) => u.x === x && u.y === y);
+      const isPlayer1 = player1Units.value.find((u) => u.x === x && u.y === y);
+      const isPlayer2 = player2Units.value.find((u) => u.x === x && u.y === y);
+      const isBase = unit?.tags.includes('base');
+      const isTank = unit?.tags.includes('tank');
+      const isSoldier = unit?.tags.includes('soldier');
+      const isFighter = unit?.tags.includes('fighter');
+      
+      let tileValue = 0;
+      if (isPlayer1 && isBase) tileValue = 0.1;
+      if (isPlayer1 && isTank) tileValue = 0.2;
+      if (isPlayer1 && isSoldier) tileValue = 0.3;
+      if (isPlayer1 && isFighter) tileValue = 0.4;
+      if (isPlayer2 && isBase) tileValue = 0.5;
+      if (isPlayer2 && isTank) tileValue = 0.6;
+      if (isPlayer2 && isSoldier) tileValue = 0.7;
+      if (isPlayer2 && isFighter) tileValue = 0.8;
+
+      tilesInput.push(tileValue);
+    }  
+  }
+
+  return tilesInput;
+};
+
 const randomlyPlaceNextUnitForPlayer2 = () => {
+  const tilesInput = prepareTilesInput();
+
   let isPositionTaken = false
-  let randomPosition = { x: 0, y: 0 }
+  let nextPosition = { x: 0, y: 0 }
+
   do {
-    randomPosition = {
-      x: Math.floor(Math.random() * 5) + 1,
-      y: Math.floor(Math.random() * 5) + 6,
-    }
-    isPositionTaken = !!player2Units.value.find((unit) => unit.x === randomPosition.x && unit.y === randomPosition.y);
+    console.log('mutate weights')
+    aiModel.setWeights(mutateWeights(aiModel.getWeights(), 0.1, 0.1));
+    const nextPositionValue = Math.abs(predictTurn(aiModel, tilesInput));
+    const nextPositionTileIndex = Math.floor(nextPositionValue * 25); // 25 fields (upper half)
+    nextPosition = {
+      x: nextPositionTileIndex % 5,
+      y: 9 - Math.floor(nextPositionTileIndex / 5),
+    };
+    isPositionTaken = !!player2Units.value.find((unit) => unit.x === nextPosition.x && unit.y === nextPosition.y);
   } while (isPositionTaken)
+  console.log(nextPosition)
+
   setTimeout(() => {
-    placeNextUnit(randomPosition.x, randomPosition.y, player2Units.value, availablePlayer2Units.value);
+    placeNextUnit(nextPosition.x, nextPosition.y, player2Units.value, availablePlayer2Units.value);
   }, Math.random() * 2000);
 };
 
 const placeNextUnit = (x: number, y: number, units: AbstractUnit[], availableUnits: AbstractUnit[]) => {
   const currentUnit = units.find((unit) => unit.x === x && unit.y === y);
   if (currentUnit) return;
-
+  
   const nextUnit = availableUnits[0];
-
+  
   if (nextUnit) {
     nextUnit.x = x;
     nextUnit.y = y;
@@ -76,13 +117,13 @@ const start = () => {
     <Game v-if="isGameStarted" />
     <template v-else>
       <div class="grid grid-cols-5 gap-1">
-        <template v-for="y in [10, 9, 8, 7, 6]">
-          <template v-for="x in [1, 2, 3, 4, 5]">
+        <template v-for="y in [9, 8, 7, 6, 5]">
+          <template v-for="x in [0, 1, 2, 3, 4]">
             <Tile :x="x" :y="y" :class="`pointer-events-none ${player2Units.find(u => u.x === x && u.y ===y) ? '' : 'opacity-50'}`" />
           </template>
         </template>
-        <template v-for="y in [5, 4, 3, 2, 1]">
-          <template v-for="x in [1, 2, 3, 4, 5]">
+        <template v-for="y in [4, 3, 2, 1, 0]">
+          <template v-for="x in [0, 1, 2, 3, 4]">
             <Tile :x="x" :y="y" @click="placeNextUnitForPlayer1(x, y)" />
           </template>
         </template>

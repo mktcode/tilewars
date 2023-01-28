@@ -40,6 +40,14 @@ const player2BaseAlive = computed(() => player2Base.value.health > 0);
 
 const focussedTarget = ref<AbstractUnit | null>(null);
 
+function unitIsPositioned(unit: AbstractUnit) {
+  return unit.x !== undefined && unit.y !== undefined;
+}
+
+function unitIsNotPositioned(unit: AbstractUnit) {
+  return !unitIsPositioned(unit);
+}
+
 export function useState() {
   return {
     level,
@@ -51,5 +59,7 @@ export function useState() {
     player1BaseAlive,
     player2BaseAlive,
     focussedTarget,
+    unitIsPositioned,
+    unitIsNotPositioned,
   }
 }

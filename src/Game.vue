@@ -30,18 +30,18 @@ const nextTurn = async() => {
   const player1UnitsHealthSum = player1Units.value.reduce((sum, unit) => sum + unit.health, 0);
   const player2UnitsHealthSum = player2Units.value.reduce((sum, unit) => sum + unit.health, 0);
 
-  const player1UnitsInRangeOfPlayer2Units = player1Units.value.filter((unit) => unit.health > 0 && player2Units.value.some((unit2) => unit2.health > 0 && unit.range >= Math.abs(unit.x - unit2.x) && unit.range >= Math.abs(unit.y - unit2.y)));
-  const player2UnitsInRangeOfPlayer1Units = player2Units.value.filter((unit) => unit.health > 0 && player1Units.value.some((unit2) => unit2.health > 0 && unit.range >= Math.abs(unit.x - unit2.x) && unit.range >= Math.abs(unit.y - unit2.y)));
+  const player1UnitsInRangeOfPlayer2Units = player1Units.value.filter((unit) => unit.health > 0 && player2Units.value.some((unit2) => unit2.health > 0 && unit.range >= Math.abs(unit.x! - unit2.x!) && unit.range >= Math.abs(unit.y! - unit2.y!)));
+  const player2UnitsInRangeOfPlayer1Units = player2Units.value.filter((unit) => unit.health > 0 && player1Units.value.some((unit2) => unit2.health > 0 && unit.range >= Math.abs(unit.x! - unit2.x!) && unit.range >= Math.abs(unit.y! - unit2.y!)));
 
   const movingPlayer1UnitsWithFreeTilesOnTheirLane = player1Units.value.filter((unit) => {
-    const unitsOnSameLane = allUnits.value.filter((unit2) => unit2.x === unit.x && unit2.y > unit.y);
-    const baseOnSameLane = player1Base.value.x === unit.x && player1Base.value.y > unit.y;
-    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < 10 - unit.y && !baseOnSameLane;
+    const unitsOnSameLane = allUnits.value.filter((unit2) => unit2.x === unit.x && unit2.y! > unit.y!);
+    const baseOnSameLane = player1Base.value.x === unit.x && player1Base.value.y! > unit.y!;
+    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < 10 - unit.y! && !baseOnSameLane;
   });
   const movingPlayer2UnitsWithFreeTilesOnTheirLane = player2Units.value.filter((unit) => {
-    const unitsOnSameLane = allUnits.value.filter((unit2) => unit2.x === unit.x && unit2.y < unit.y);
-    const baseOnSameLane = player2Base.value.x === unit.x && player2Base.value.y < unit.y;
-    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < unit.y - 1 && !baseOnSameLane;
+    const unitsOnSameLane = allUnits.value.filter((unit2) => unit2.x === unit.x && unit2.y! < unit.y!);
+    const baseOnSameLane = player2Base.value.x === unit.x && player2Base.value.y! < unit.y!;
+    return unit.health > 0 && unit.speed > 0 && unitsOnSameLane.length < unit.y! - 1 && !baseOnSameLane;
   });
   
   // when the game was perfectly balanced
@@ -126,8 +126,8 @@ const nextLevel = () => {
 <template>
   <div>
     <div class="grid grid-cols-5 gap-1">
-      <template v-for="y in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]">
-        <template v-for="x in [1, 2, 3, 4, 5]">
+      <template v-for="y in [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]">
+        <template v-for="x in [0, 1, 2, 3, 4]">
           <Tile :x="x" :y="y" :class="`${allUnits.find(u => u.x === x && u.y === y) ? '' : 'pointer-events-none'}`" />
         </template>
       </template>
