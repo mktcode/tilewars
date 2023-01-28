@@ -27,7 +27,7 @@ const moveUnits = (turnCount: number, direction: DIRECTION, units: AbstractUnit[
     if (!speedAllowsMove) return
 
     const targetY = unit.y! + (direction === DIRECTION.Up ? 1 : -1)
-    if (targetY < 1 || targetY > 10) return
+    if (targetY < 0 || targetY > 9) return
 
     const isBlockedByUnit = [...units, ...enemyUnits].find(
       otherUnit =>
@@ -69,6 +69,7 @@ const dealDamage = (turnCount: number, units: AbstractUnit[], enemyUnits: Abstra
     }
 
     enemyToAttack.health -= unit.damage
+    console.log(enemyToAttack, unit)
     if (enemyToAttack.health < 0) enemyToAttack.health = 0
   })
 }
