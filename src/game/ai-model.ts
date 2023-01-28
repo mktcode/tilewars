@@ -54,7 +54,7 @@ export function mutateWeights(weights: tf.Tensor[], diviationRate: number, proba
 
 export function predictTurn(model: tf.Sequential, tiles: number[]) {
   const input = tf.tensor1d(tiles).reshape([1, 50]);
-  const output = model.predict(input);
+  const output = model.predict(input) as tf.Tensor;
   const outputValue = output.dataSync();
   
   return outputValue;
