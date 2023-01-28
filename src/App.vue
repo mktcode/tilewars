@@ -126,7 +126,7 @@ const start = () => {
 <template>
   <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-5">
     <Transition>
-      <div v-if="showTutorial" class="absolute inset-0 flex flex-col items-center justify-center z-10 bg-black bg-opacity-20">
+      <div v-if="showTutorial" class="absolute inset-0 flex flex-col items-center justify-center z-10">
         <div class="bg-white rounded p-5 shadow-xl text-sm text-gray-700 max-w-sm space-y-3">
           <div class="text-center mb-5">
             <h1 class="text-xl">Tilewars A.I.</h1>
