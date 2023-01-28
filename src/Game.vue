@@ -8,9 +8,6 @@ import PlayIcon from './icons/Play.vue';
 import PauseIcon from './icons/Pause.vue';
 import NextTurnIcon from './icons/NextTurn.vue';
 
-const crazysdk = window.CrazyGames.CrazySDK.getInstance();
-crazysdk.init();
-
 const { allUnits, player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive, focussedTarget } = useState();
 
 const turnCount = ref(0);
@@ -100,14 +97,7 @@ const reload = () => {
 
 const nextLevel = () => {
   localStorage.setItem('level', (Number(localStorage.getItem('level')) + 1).toString());
-  playAd();
-}
-
-const playAd = () => {
-  crazysdk.addEventListener()
-  crazysdk.addEventListener('adFinished', reload);
-  crazysdk.addEventListener('adError', reload);
-  crazysdk.requestAd();
+  reload();
 }
 </script>
 
