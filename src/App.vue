@@ -81,8 +81,9 @@ const mutateAiUntilEmptyTileFound = async (): Promise<{x: number, y: number }> =
 
   do {
     await new Promise(resolve => setTimeout(resolve, 0)); // UI-blocking workaround
-    aiModel.setWeights(mutateWeights(aiModel.getWeights(), 0.01, 0.1));
+    aiModel.setWeights(mutateWeights(aiModel.getWeights(), 0.02, 0.1));
     const nextPositionValue = Math.abs(predictTurn(aiModel, tilesInput));
+    console.log('nextPositionValue', nextPositionValue)
     const nextPositionTileIndex = Math.floor(nextPositionValue * 25); // 25 fields (upper half)
     nextPosition = {
       x: nextPositionTileIndex % 5,
@@ -123,7 +124,7 @@ const start = () => {
 
 <template>
   <main class="flex flex-col max-w-5xl mx-auto items-center justify-center pt-5">
-    <Game v-if="isGameStarted" />
+    <Game v-if="isGameStarted" @game-ended="isGameStarted = false" />
     <template v-else>
       <Transition>
         <div v-if="aiIsThinking" class="absolute inset-0 flex items-start justify-center z-10">

@@ -16,7 +16,7 @@ button:disabled {
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 1s ease;
+  transition: opacity .5s ease;
 }
 
 .v-enter-from,

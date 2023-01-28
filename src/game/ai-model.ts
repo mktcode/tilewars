@@ -27,7 +27,7 @@ export function getEmptyAiModel() {
   const model = tf.sequential();
   model.add(tf.layers.dense({ units: 32, inputShape: [50] }));
   model.add(tf.layers.dense({ units: 32 }));
-  model.add(tf.layers.dense({ units: 1 }));
+  model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
   
   model.compile({loss: 'meanSquaredError', optimizer: 'sgd'});
 

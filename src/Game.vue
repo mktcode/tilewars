@@ -7,6 +7,11 @@ import FastForwardIcon from './icons/FastForward.vue';
 import PlayIcon from './icons/Play.vue';
 import PauseIcon from './icons/Pause.vue';
 import NextTurnIcon from './icons/NextTurn.vue';
+import { Base, Fighter, Soldier, Tank } from './game/objects';
+
+const emit = defineEmits<{
+  (event: 'game-ended'): void;
+}>();
 
 const { allUnits, player1Units, player2Units, player1Base, player1BaseAlive, player2Base, player2BaseAlive, focussedTarget } = useState();
 
@@ -113,13 +118,43 @@ const toggleIsPlaying = () => {
   }
 };
 
-const reload = () => {
-  window.location.reload();
-};
+const resetUnits = () => {
+  player1Units.value = [];
+  player2Units.value = [];
+
+  player1Units.value.push(new Base())
+  player1Units.value.push(new Tank())
+  player1Units.value.push(new Tank())
+  player1Units.value.push(new Tank())
+  player1Units.value.push(new Soldier())
+  player1Units.value.push(new Soldier())
+  player1Units.value.push(new Soldier())
+  player1Units.value.push(new Soldier())
+  player1Units.value.push(new Soldier())
+  player1Units.value.push(new Fighter())
+  player1Units.value.push(new Fighter())
+
+  player2Units.value.push(new Base())
+  player2Units.value.push(new Tank())
+  player2Units.value.push(new Tank())
+  player2Units.value.push(new Tank())
+  player2Units.value.push(new Soldier())
+  player2Units.value.push(new Soldier())
+  player2Units.value.push(new Soldier())
+  player2Units.value.push(new Soldier())
+  player2Units.value.push(new Soldier())
+  player2Units.value.push(new Fighter())
+  player2Units.value.push(new Fighter())
+}
+
+function end() {
+  resetUnits();
+  emit('game-ended');
+}
 
 const nextLevel = () => {
   localStorage.setItem('level', (Number(localStorage.getItem('level')) + 1).toString());
-  reload();
+  end();
 }
 </script>
 
@@ -142,7 +177,7 @@ const nextLevel = () => {
       <button v-if="isPlaying" @click="toggleSpeed()">
         <FastForwardIcon width="20" height="20" />
       </button>
-      <button @click="reload">new game</button>
+      <button @click="end">new game</button>
     </div>
 
     <div class="text-center font-bold ml-auto mt-3">
@@ -172,11 +207,11 @@ const nextLevel = () => {
         </template>
         <template v-if="player2Wins">
           <div class="text-4xl text-slate-400">You lost! :(</div>
-          <button class="mt-3 w-full" @click="reload">try again</button>
+          <button class="mt-3 w-full" @click="end">try again</button>
         </template>
         <template v-if="!player1Wins && !player2Wins">
           <div class="text-4xl text-slate-400">Draw! :|</div>
-          <button class="mt-3 w-full" @click="reload">try again</button>
+          <button class="mt-3 w-full" @click="end">try again</button>
         </template>
       </div>
     </div>
