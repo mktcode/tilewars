@@ -51,7 +51,7 @@ const randomlyPlaceNextUnitForPlayer2 = () => {
   } while (isPositionTaken)
   setTimeout(() => {
     placeNextUnit(randomPosition.x, randomPosition.y, player2Units.value, availablePlayer2Units.value);
-  }, 200);
+  }, Math.random() * 3000);
 };
 
 const placeNextUnit = (x: number, y: number, units: AbstractUnit[], availableUnits: AbstractUnit[]) => {
