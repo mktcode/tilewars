@@ -26,7 +26,7 @@ function toggleFocus() {
     >
       <div class="text-xs leading-none capitalize">{{ unit.tags[0] }}</div>
       <div class="w-10 mt-1">
-        <div class="h-1 bg-white opacity-50 rounded-full" :style="`width: ${Math.floor(unit.health / unit.maxHealth * 100)}%`"></div>
+        <div class="h-1 bg-white opacity-50 rounded-full transition-all" :style="`width: ${Math.floor(unit.health / unit.maxHealth * 100)}%`"></div>
       </div>
       <CrosshairsIcon
         v-if="focussedTarget && unit === focussedTarget"
